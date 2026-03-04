@@ -1,0 +1,2116 @@
+<!DOCTYPE html>
+<!-- FLAG{w3lc0me_h4ck3r} -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HACKER ACADEMY | CTF Training Ground</title>
+<style>
+/* ═══════════════════════════════════════════════
+   RESET & CSS VARIABLES
+═══════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #060d06;
+  --card: #0a160a;
+  --card2: #0d1c0d;
+  --green: #00ff41;
+  --cyan: #00d4ff;
+  --red: #ff2055;
+  --purple: #bf00ff;
+  --gold: #ffd700;
+  --dim: #1a3320;
+  --dimmer: #0f1f0f;
+  --border: rgba(0,255,65,0.18);
+  --accent: #00ff41;
+  --font: 'Courier New', Courier, monospace;
+}
+
+body {
+  background: var(--bg);
+  color: var(--green);
+  font-family: var(--font);
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding-bottom: 80px;
+}
+
+/* Scanlines overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0,0,0,0.12) 3px,
+    rgba(0,0,0,0.12) 4px
+  );
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* Vignette */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.6) 100%);
+  pointer-events: none;
+  z-index: 9997;
+}
+
+/* ═══════════════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════════════ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 3px; }
+
+/* ═══════════════════════════════════════════════
+   BOOT SEQUENCE
+═══════════════════════════════════════════════ */
+#boot {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  transition: opacity 0.8s ease;
+}
+#boot.fade-out { opacity: 0; pointer-events: none; }
+
+.boot-line {
+  font-family: var(--font);
+  font-size: 0.95rem;
+  color: #00ff41;
+  width: 440px;
+  max-width: 90vw;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.boot-line.show { opacity: 1; }
+.boot-cursor {
+  display: inline-block;
+  width: 9px;
+  height: 1.1em;
+  background: #00ff41;
+  vertical-align: text-bottom;
+  animation: blink 0.7s step-end infinite;
+  margin-left: 2px;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ═══════════════════════════════════════════════
+   PROFILE MODAL
+═══════════════════════════════════════════════ */
+#modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 5000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  display: none;
+}
+#modal-backdrop.show { display: flex; }
+
+#profile-modal {
+  background: var(--card);
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 40px rgba(0,255,65,0.15), 0 0 80px rgba(0,255,65,0.05);
+  padding: 32px;
+  width: 480px;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-title {
+  font-size: 1.1rem;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-shadow: 0 0 8px var(--accent);
+  margin-bottom: 6px;
+  text-align: center;
+}
+.modal-sub {
+  font-size: 0.75rem;
+  color: var(--dim);
+  text-align: center;
+  margin-bottom: 28px;
+  letter-spacing: 0.1em;
+}
+
+.form-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.hacker-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--green);
+  font-family: var(--font);
+  font-size: 1rem;
+  padding: 10px 14px;
+  outline: none;
+  letter-spacing: 0.05em;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.hacker-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(0,255,65,0.2);
+}
+
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.avatar-btn {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--green);
+  font-size: 1.3rem;
+  padding: 10px 6px;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all 0.2s;
+  text-align: center;
+}
+.avatar-btn:hover, .avatar-btn.selected {
+  border-color: var(--accent);
+  background: var(--dimmer);
+  box-shadow: 0 0 10px rgba(0,255,65,0.2);
+  color: var(--accent);
+}
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.color-btn {
+  padding: 10px 6px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-align: center;
+  transition: all 0.2s;
+  background: var(--bg);
+}
+.color-btn:hover, .color-btn.selected { border-color: currentColor; box-shadow: 0 0 10px currentColor; }
+
+.btn-primary {
+  width: 100%;
+  background: var(--accent);
+  color: #000;
+  border: none;
+  font-family: var(--font);
+  font-size: 0.85rem;
+  font-weight: bold;
+  letter-spacing: 0.2em;
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+}
+.btn-primary:hover {
+  box-shadow: 0 0 20px var(--accent);
+  transform: translateY(-1px);
+}
+
+.modal-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 20px 0;
+}
+
+.danger-btn {
+  background: transparent;
+  border: 1px solid var(--red);
+  color: var(--red);
+  font-family: var(--font);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  padding: 8px 16px;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s;
+}
+.danger-btn:hover { background: rgba(255,32,85,0.1); box-shadow: 0 0 10px rgba(255,32,85,0.3); }
+
+/* ═══════════════════════════════════════════════
+   HUD BAR
+═══════════════════════════════════════════════ */
+#hud {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(6,13,6,0.95);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 24px;
+  flex-wrap: wrap;
+}
+
+.hud-avatar {
+  font-size: 1.3rem;
+  min-width: 36px;
+  text-align: center;
+  text-shadow: 0 0 8px var(--accent);
+}
+
+.hud-name {
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+}
+.hud-name span { font-size: 0.65rem; color: var(--dim); display: block; letter-spacing: 0.08em; }
+
+.hud-sep { color: var(--dim); font-size: 0.8rem; }
+
+.hud-coins {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--gold);
+  text-shadow: 0 0 8px var(--gold);
+}
+#coin-count {
+  font-size: 1rem;
+  font-weight: bold;
+  transition: transform 0.3s;
+  min-width: 30px;
+}
+#coin-count.pop {
+  animation: coinPop 0.4s ease;
+}
+@keyframes coinPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.5); color: #fff; }
+  100% { transform: scale(1); }
+}
+
+.hud-rank {
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  padding: 3px 10px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  text-shadow: 0 0 6px var(--accent);
+  white-space: nowrap;
+}
+
+.hud-settings {
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--dim);
+  font-family: var(--font);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.hud-settings:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ═══════════════════════════════════════════════
+   MAIN CONTENT
+═══════════════════════════════════════════════ */
+#app {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 32px 20px;
+  display: none;
+}
+#app.show { display: block; }
+
+/* ASCII Title */
+.ascii-title {
+  font-size: 0.6rem;
+  line-height: 1.2;
+  color: var(--accent);
+  text-shadow: 0 0 12px var(--accent);
+  text-align: center;
+  margin-bottom: 8px;
+  white-space: pre;
+  letter-spacing: 0;
+  animation: titleFlicker 8s ease-in-out infinite;
+}
+@keyframes titleFlicker {
+  0%, 95%, 100% { opacity: 1; }
+  96% { opacity: 0.7; }
+  97% { opacity: 1; }
+  98% { opacity: 0.5; }
+  99% { opacity: 1; }
+}
+
+.intro-block {
+  border-left: 2px solid var(--accent);
+  padding: 12px 20px;
+  margin: 24px 0 36px;
+  background: var(--dimmer);
+  font-size: 0.8rem;
+  line-height: 1.8;
+  color: var(--green);
+}
+.intro-block .prompt { color: var(--accent); }
+
+/* ═══════════════════════════════════════════════
+   CHALLENGE CARDS
+═══════════════════════════════════════════════ */
+.challenges { display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px; }
+
+.challenge-card {
+  border: 1px solid var(--border);
+  background: var(--card);
+  transition: border-color 0.3s, box-shadow 0.3s;
+  overflow: hidden;
+}
+.challenge-card:hover { border-color: rgba(0,255,65,0.4); }
+.challenge-card.completed {
+  border-color: rgba(0,255,65,0.5);
+  box-shadow: 0 0 20px rgba(0,255,65,0.08);
+}
+.challenge-card.shake {
+  animation: cardShake 0.4s ease;
+}
+@keyframes cardShake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+.challenge-card.flash-success {
+  animation: cardFlash 0.5s ease;
+}
+@keyframes cardFlash {
+  0%,100% { box-shadow: 0 0 20px rgba(0,255,65,0.08); }
+  50% { box-shadow: 0 0 40px rgba(0,255,65,0.5), inset 0 0 20px rgba(0,255,65,0.1); }
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+}
+.card-header:hover { background: var(--dimmer); }
+
+.tier-badge {
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  padding: 3px 7px;
+  border: 1px solid;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.tier-recruit { border-color: var(--green); color: var(--green); }
+.tier-hacker { border-color: var(--cyan); color: var(--cyan); }
+.tier-elite { border-color: var(--purple); color: var(--purple); }
+
+.card-title-block { flex: 1; min-width: 0; }
+.card-ch-num { font-size: 0.65rem; color: var(--dim); letter-spacing: 0.15em; }
+.card-title { font-size: 0.9rem; letter-spacing: 0.1em; color: var(--accent); }
+.card-subtitle { font-size: 0.7rem; color: var(--dim); margin-top: 2px; }
+
+.card-coins {
+  font-size: 0.8rem;
+  color: var(--gold);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.card-status {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  flex-shrink: 0;
+  width: 80px;
+  text-align: right;
+}
+.status-pending { color: var(--dim); }
+.status-done { color: var(--green); text-shadow: 0 0 6px var(--green); }
+
+.card-arrow {
+  font-size: 0.9rem;
+  color: var(--dim);
+  transition: transform 0.3s;
+  flex-shrink: 0;
+}
+.card-arrow.open { transform: rotate(90deg); color: var(--accent); }
+
+.card-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+.card-body.open { max-height: 1200px; }
+
+.card-inner {
+  padding: 20px 20px 24px;
+  border-top: 1px solid var(--border);
+}
+
+/* Challenge content styles */
+.ch-desc {
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: #aaccaa;
+  margin-bottom: 16px;
+}
+
+.code-block {
+  background: #000;
+  border: 1px solid var(--dim);
+  padding: 14px 16px;
+  font-size: 0.8rem;
+  color: #00ff41;
+  margin: 12px 0;
+  overflow-x: auto;
+  letter-spacing: 0.05em;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-all;
+  user-select: all;
+}
+
+.info-box {
+  background: rgba(0,212,255,0.05);
+  border: 1px solid rgba(0,212,255,0.2);
+  padding: 12px 16px;
+  margin: 12px 0;
+  font-size: 0.75rem;
+  color: #00d4ff;
+  line-height: 1.6;
+}
+
+/* Caesar slider */
+.cipher-tool {
+  background: var(--dimmer);
+  border: 1px solid var(--border);
+  padding: 16px;
+  margin: 12px 0;
+}
+.cipher-tool label {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--dim);
+  display: block;
+  margin-bottom: 8px;
+}
+.cipher-tool input[type="range"] {
+  width: 100%;
+  margin: 8px 0;
+  accent-color: var(--accent);
+}
+.cipher-output {
+  font-size: 0.85rem;
+  color: var(--green);
+  margin-top: 10px;
+  padding: 10px;
+  background: #000;
+  border: 1px solid var(--dim);
+  word-break: break-all;
+  min-height: 38px;
+  transition: color 0.3s;
+}
+.cipher-output.found { color: var(--gold); text-shadow: 0 0 8px var(--gold); }
+
+/* Binary display */
+.binary-display {
+  background: #000;
+  border: 1px solid var(--dim);
+  padding: 14px 16px;
+  font-size: 0.75rem;
+  color: var(--cyan);
+  letter-spacing: 0.08em;
+  line-height: 1.8;
+  word-break: break-all;
+  margin: 12px 0;
+}
+
+/* Hidden text (steganography) */
+.stego-box {
+  background: #000;
+  border: 1px solid var(--dim);
+  padding: 16px;
+  margin: 12px 0;
+  font-size: 0.8rem;
+  line-height: 1.9;
+  color: var(--green);
+  user-select: all;
+}
+.hidden-flag {
+  color: #000;
+  background: #000;
+  user-select: text;
+}
+.stego-box:hover .hidden-flag { /* still hidden on hover - must select */ }
+
+/* DevTools challenge */
+.locked-box {
+  background: var(--dimmer);
+  border: 1px dashed var(--red);
+  padding: 16px;
+  text-align: center;
+  margin: 12px 0;
+}
+.locked-label {
+  font-size: 0.75rem;
+  color: var(--red);
+  letter-spacing: 0.15em;
+  display: block;
+  margin-bottom: 12px;
+}
+.locked-btn {
+  background: transparent;
+  border: 1px solid var(--red);
+  color: var(--red);
+  font-family: var(--font);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  padding: 10px 20px;
+  cursor: default;
+  opacity: 0.7;
+}
+
+/* Robots terminal */
+.terminal-sim {
+  background: #000;
+  border: 1px solid var(--dim);
+  padding: 0;
+  margin: 12px 0;
+}
+.terminal-titlebar {
+  background: #1a1a1a;
+  padding: 6px 12px;
+  font-size: 0.65rem;
+  color: #555;
+  letter-spacing: 0.1em;
+  border-bottom: 1px solid #222;
+}
+.terminal-body {
+  padding: 12px 14px;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: #ccc;
+}
+.terminal-body .prompt-sym { color: var(--green); }
+.terminal-body .cmd { color: var(--cyan); }
+.terminal-body .response { color: #999; }
+.terminal-body .secret-path { color: var(--gold); text-decoration: underline; cursor: pointer; }
+
+/* Vault puzzle (logic) */
+.vault-clues { display: flex; flex-direction: column; gap: 10px; margin: 12px 0; }
+.clue-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--dimmer);
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+}
+.clue-num {
+  font-size: 0.65rem;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+  min-width: 20px;
+}
+.clue-text { flex: 1; font-size: 0.78rem; color: #aaccaa; }
+.clue-input {
+  width: 52px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--green);
+  font-family: var(--font);
+  font-size: 1rem;
+  padding: 6px 8px;
+  text-align: center;
+  outline: none;
+}
+.clue-input:focus { border-color: var(--accent); }
+.clue-input.correct { border-color: var(--green); color: var(--green); background: rgba(0,255,65,0.05); }
+.clue-check { font-size: 0.8rem; min-width: 16px; }
+
+.vault-reveal {
+  display: none;
+  background: rgba(0,255,65,0.05);
+  border: 1px solid var(--green);
+  padding: 14px 16px;
+  margin: 12px 0;
+  font-size: 0.8rem;
+  text-align: center;
+  color: var(--green);
+}
+.vault-reveal.show { display: block; }
+.vault-flag { font-size: 1rem; color: var(--gold); letter-spacing: 0.08em; margin-top: 6px; }
+
+/* Multi-step */
+.step-box {
+  background: var(--dimmer);
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+  margin: 8px 0;
+}
+.step-num {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--cyan);
+  margin-bottom: 6px;
+}
+.step-desc { font-size: 0.78rem; color: #aaccaa; line-height: 1.6; }
+
+/* Flag input section */
+.flag-section { margin-top: 18px; }
+.flag-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--dim);
+  margin-bottom: 8px;
+  display: block;
+}
+.flag-row { display: flex; gap: 8px; }
+.flag-input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--green);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  padding: 10px 14px;
+  outline: none;
+  letter-spacing: 0.04em;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.flag-input:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(0,255,65,0.15); }
+.flag-input:disabled { opacity: 0.4; }
+
+.submit-btn {
+  background: var(--accent);
+  border: none;
+  color: #000;
+  font-family: var(--font);
+  font-size: 0.75rem;
+  font-weight: bold;
+  letter-spacing: 0.15em;
+  padding: 10px 18px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.submit-btn:hover { box-shadow: 0 0 16px var(--accent); }
+.submit-btn:disabled { opacity: 0.4; cursor: default; box-shadow: none; }
+
+.flag-feedback {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  margin-top: 8px;
+  min-height: 20px;
+  transition: color 0.2s;
+}
+.feedback-ok { color: var(--green); text-shadow: 0 0 6px var(--green); }
+.feedback-err { color: var(--red); }
+
+/* Hint system */
+.hint-toggle {
+  background: transparent;
+  border: none;
+  color: var(--dim);
+  font-family: var(--font);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  padding: 8px 0;
+  margin-top: 10px;
+  display: block;
+  transition: color 0.2s;
+}
+.hint-toggle:hover { color: var(--cyan); }
+.hint-box {
+  background: rgba(0,212,255,0.04);
+  border: 1px solid rgba(0,212,255,0.15);
+  padding: 12px 14px;
+  margin-top: 6px;
+  font-size: 0.75rem;
+  color: #88cccc;
+  line-height: 1.7;
+  display: none;
+}
+.hint-box.show { display: block; }
+
+/* Completed overlay */
+.completed-banner {
+  background: rgba(0,255,65,0.08);
+  border: 1px solid rgba(0,255,65,0.3);
+  padding: 14px 18px;
+  text-align: center;
+  display: none;
+}
+.completed-banner.show { display: block; }
+.completed-banner .big-text {
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+  color: var(--green);
+  text-shadow: 0 0 10px var(--green);
+}
+.completed-banner .coin-earned {
+  font-size: 0.8rem;
+  color: var(--gold);
+  margin-top: 4px;
+}
+
+/* ═══════════════════════════════════════════════
+   BADGES
+═══════════════════════════════════════════════ */
+.badges-section { margin: 32px 0; }
+.badges-title {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--dim);
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.badges-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+.badge {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 10px 14px;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--dim);
+  transition: all 0.4s;
+  text-align: center;
+}
+.badge .badge-icon { font-size: 1.1rem; display: block; margin-bottom: 4px; }
+.badge.earned {
+  border-color: var(--gold);
+  color: var(--gold);
+  text-shadow: 0 0 8px rgba(255,215,0,0.4);
+  box-shadow: 0 0 14px rgba(255,215,0,0.1);
+  animation: badgePulse 3s ease-in-out infinite;
+}
+@keyframes badgePulse {
+  0%,100% { box-shadow: 0 0 14px rgba(255,215,0,0.1); }
+  50% { box-shadow: 0 0 22px rgba(255,215,0,0.25); }
+}
+
+/* ═══════════════════════════════════════════════
+   PROGRESS BAR (sticky footer)
+═══════════════════════════════════════════════ */
+#progress-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(6,13,6,0.97);
+  border-top: 1px solid var(--border);
+  padding: 10px 24px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  backdrop-filter: blur(8px);
+}
+.progress-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: var(--dim);
+  white-space: nowrap;
+}
+.progress-track {
+  flex: 1;
+  height: 6px;
+  background: var(--dimmer);
+  border: 1px solid var(--border);
+}
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  transition: width 0.6s ease;
+  width: 0%;
+}
+.progress-count {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════════
+   CELEBRATION OVERLAY
+═══════════════════════════════════════════════ */
+#celebrate {
+  position: fixed;
+  inset: 0;
+  z-index: 8000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.85);
+  display: none;
+}
+#celebrate.show { display: flex; }
+.celebrate-box {
+  background: var(--card);
+  border: 2px solid var(--gold);
+  box-shadow: 0 0 60px rgba(255,215,0,0.3);
+  padding: 48px;
+  text-align: center;
+  max-width: 480px;
+  animation: celebrateIn 0.5s ease;
+}
+@keyframes celebrateIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.celebrate-title {
+  font-size: 1.5rem;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  text-shadow: 0 0 20px var(--gold);
+  margin-bottom: 12px;
+}
+.celebrate-sub { font-size: 0.8rem; color: #aaaaaa; margin-bottom: 24px; line-height: 1.7; }
+.celebrate-close {
+  background: var(--gold);
+  border: none;
+  color: #000;
+  font-family: var(--font);
+  font-size: 0.8rem;
+  font-weight: bold;
+  letter-spacing: 0.15em;
+  padding: 12px 28px;
+  cursor: pointer;
+}
+
+/* ═══════════════════════════════════════════════
+   COIN PARTICLE EFFECT
+═══════════════════════════════════════════════ */
+.coin-particle {
+  position: fixed;
+  pointer-events: none;
+  font-size: 1.2rem;
+  z-index: 9000;
+  animation: coinFloat 1.2s ease forwards;
+}
+@keyframes coinFloat {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-80px) scale(0.5); }
+}
+
+/* Misc */
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 12px 0;
+}
+.text-dim { color: var(--dim); }
+.text-green { color: var(--green); }
+.text-cyan { color: var(--cyan); }
+.text-gold { color: var(--gold); }
+.mt8 { margin-top: 8px; }
+.mt12 { margin-top: 12px; }
+
+@media (max-width: 600px) {
+  .ascii-title { font-size: 0.38rem; }
+  .hud-rank { display: none; }
+  .card-header { padding: 12px; gap: 8px; }
+  .tier-badge { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ╔═══════════════════════════════════════════╗ -->
+<!-- ║           BOOT SEQUENCE OVERLAY           ║ -->
+<!-- ╚═══════════════════════════════════════════╝ -->
+<div id="boot">
+  <div class="boot-line" id="bl1">&gt; INITIALIZING HACKER ACADEMY v1.0...</div>
+  <div class="boot-line" id="bl2">&gt; LOADING CRYPTOGRAPHIC MODULES......... OK</div>
+  <div class="boot-line" id="bl3">&gt; ESTABLISHING SECURE TUNNEL............. OK</div>
+  <div class="boot-line" id="bl4">&gt; DECRYPTING CHALLENGE DATABASE.......... OK</div>
+  <div class="boot-line" id="bl5">&gt; SCANNING FOR INTRUDERS................. NONE</div>
+  <div class="boot-line" id="bl6" style="color:#ffd700">&gt; ACCESS GRANTED. WELCOME, HACKER. <span class="boot-cursor"></span></div>
+</div>
+
+<!-- ╔═══════════════════════════════════════════╗ -->
+<!-- ║            PROFILE MODAL                  ║ -->
+<!-- ╚═══════════════════════════════════════════╝ -->
+<div id="modal-backdrop">
+  <div id="profile-modal">
+    <div class="modal-title">&gt; INITIALIZE HACKER PROFILE_</div>
+    <div class="modal-sub">SET UP YOUR IDENTITY BEFORE ENTERING THE SYSTEM</div>
+
+    <label class="form-label">&gt; ENTER YOUR HACKER NAME:</label>
+    <input type="text" id="nickname-input" class="hacker-input" placeholder="e.g. ShadowByte" maxlength="20" autocomplete="off" spellcheck="false">
+
+    <br><br>
+    <label class="form-label" style="margin-top:16px">&gt; SELECT YOUR AVATAR:</label>
+    <div class="avatar-grid">
+      <button class="avatar-btn selected" data-avatar="0">[X]</button>
+      <button class="avatar-btn" data-avatar="1">[*]</button>
+      <button class="avatar-btn" data-avatar="2">[#]</button>
+      <button class="avatar-btn" data-avatar="3">[@]</button>
+      <button class="avatar-btn" data-avatar="4">[^]</button>
+      <button class="avatar-btn" data-avatar="5">[~]</button>
+    </div>
+
+    <label class="form-label">&gt; CHOOSE YOUR COLOUR SCHEME:</label>
+    <div class="color-grid">
+      <button class="color-btn selected" data-color="#00ff41" style="color:#00ff41; border-color: #00ff41">MATRIX<br>GREEN</button>
+      <button class="color-btn" data-color="#00d4ff" style="color:#00d4ff">ICE<br>CYAN</button>
+      <button class="color-btn" data-color="#ff2055" style="color:#ff2055">DANGER<br>RED</button>
+      <button class="color-btn" data-color="#bf00ff" style="color:#bf00ff">SHADOW<br>PURPLE</button>
+    </div>
+
+    <button class="btn-primary" id="save-profile-btn">&gt; INITIALIZE PROFILE</button>
+
+    <hr class="modal-divider" id="reset-divider" style="display:none">
+    <button class="danger-btn" id="reset-btn" style="display:none">&gt; RESET ALL PROGRESS (WARNING: IRREVERSIBLE)</button>
+  </div>
+</div>
+
+<!-- ╔═══════════════════════════════════════════╗ -->
+<!-- ║              CELEBRATION                  ║ -->
+<!-- ╚═══════════════════════════════════════════╝ -->
+<div id="celebrate">
+  <div class="celebrate-box">
+    <div class="celebrate-title">CYBER LEGEND</div>
+    <div style="font-size:0.7rem;letter-spacing:0.2em;color:#aaa;margin-bottom:16px">RANK ACHIEVED</div>
+    <div class="celebrate-sub">
+      You have captured all 10 flags and completed<br>
+      every challenge in the HACKER ACADEMY.<br><br>
+      <span style="color:#ffd700">You are a true cyber legend.</span>
+    </div>
+    <button class="celebrate-close" onclick="document.getElementById('celebrate').classList.remove('show')">&gt; CONTINUE</button>
+  </div>
+</div>
+
+<!-- ╔═══════════════════════════════════════════╗ -->
+<!-- ║                HUD BAR                    ║ -->
+<!-- ╚═══════════════════════════════════════════╝ -->
+<div id="hud">
+  <div class="hud-avatar" id="hud-avatar">[X]</div>
+  <div class="hud-name">
+    <span>HACKER</span>
+    <span id="hud-nickname" style="font-size:0.9rem;color:var(--accent)">UNKNOWN</span>
+  </div>
+  <div class="hud-sep">//</div>
+  <div class="hud-coins">
+    <span>&#9711;</span>
+    <span id="coin-count">0</span>
+    <span style="font-size:0.65rem;color:#aa9900;letter-spacing:0.1em">COINS</span>
+  </div>
+  <div class="hud-sep">//</div>
+  <div class="hud-rank" id="hud-rank">SCRIPT KIDDIE</div>
+  <button class="hud-settings" onclick="openSettings()">&gt; SETTINGS</button>
+</div>
+
+<!-- ╔═══════════════════════════════════════════╗ -->
+<!-- ║              MAIN APP                     ║ -->
+<!-- ╚═══════════════════════════════════════════╝ -->
+<div id="app">
+
+  <!-- ASCII Title -->
+  <pre class="ascii-title">
+ ██╗  ██╗ █████╗  ██████╗██╗  ██╗███████╗██████╗      █████╗  ██████╗ █████╗ ██████╗ ███████╗███╗   ███╗██╗   ██╗
+ ██║  ██║██╔══██╗██╔════╝██║ ██╔╝██╔════╝██╔══██╗    ██╔══██╗██╔════╝██╔══██╗██╔══██╗██╔════╝████╗ ████║╚██╗ ██╔╝
+ ███████║███████║██║     █████╔╝ █████╗  ██████╔╝    ███████║██║     ███████║██║  ██║█████╗  ██╔████╔██║ ╚████╔╝
+ ██╔══██║██╔══██║██║     ██╔═██╗ ██╔══╝  ██╔══██╗    ██╔══██║██║     ██╔══██║██║  ██║██╔══╝  ██║╚██╔╝██║  ╚██╔╝
+ ██║  ██║██║  ██║╚██████╗██║  ██╗███████╗██║  ██║    ██║  ██║╚██████╗██║  ██║██████╔╝███████╗██║ ╚═╝ ██║   ██║
+ ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝    ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝     ╚═╝   ╚═╝</pre>
+
+  <div class="intro-block">
+    <span class="prompt">&gt; </span>Welcome to the CTF Training Ground. Your mission: find hidden <strong>FLAGS</strong>.<br>
+    <span class="prompt">&gt; </span>Flags look like this: <code style="color:var(--gold)">FLAG{something_here}</code><br>
+    <span class="prompt">&gt; </span>Complete challenges to earn <span class="text-gold">COINS</span> and level up your rank.<br>
+    <span class="prompt">&gt; </span>Start easy. Build your skills. Become a Cyber Legend.<br>
+    <span class="prompt">&gt; </span><span class="text-dim">Tip: Flags are case-sensitive. Copy them exactly!</span>
+  </div>
+
+  <!-- ═════════════════════════════════════════
+       CHALLENGES
+  ═════════════════════════════════════════ -->
+  <div class="challenges" id="challenges-container">
+
+    <!-- ──────────────────────────────────────
+         CH 01 — VIEW SOURCE
+    ────────────────────────────────────────── -->
+    <div class="challenge-card" id="card-1">
+      <div class="card-header" onclick="toggleCard(1)">
+        <div class="tier-badge tier-recruit">RECRUIT</div>
+        <div class="card-title-block">
+          <div class="card-ch-num">CH.01</div>
+          <div class="card-title">VIEW SOURCE</div>
+          <div class="card-subtitle">Find the Hidden Comment</div>
+        </div>
+        <div class="card-coins">&#9711; 5</div>
+        <div class="card-status status-pending" id="status-1">LOCKED</div>
+        <div class="card-arrow" id="arrow-1">&#9658;</div>
+      </div>
+      <div class="card-body" id="body-1">
+        <div class="card-inner">
+          <div class="completed-banner" id="complete-1">
+            <div class="big-text">&#9646; FLAG CAPTURED &#9646;</div>
+            <div class="coin-earned">+5 COINS AWARDED</div>
+          </div>
+          <div class="ch-desc">
+            Real hackers always check the source code of a webpage. Web pages are made of HTML — and sometimes developers accidentally (or intentionally) leave secret messages hidden in the code as <strong>comments</strong>.<br><br>
+            A comment in HTML looks like this: <code style="color:var(--cyan)">&lt;!-- hidden message here --&gt;</code><br><br>
+            The flag for this challenge is hidden somewhere in this very page's source code!
+          </div>
+          <div class="info-box">
+            <strong>HOW TO VIEW SOURCE:</strong><br>
+            On this page: Right-click anywhere &rarr; "View Page Source" (Chrome/Firefox)<br>
+            Then press <kbd style="background:#222;padding:1px 5px;border:1px solid #444">Ctrl+F</kbd> (or Cmd+F on Mac) and search for <strong>FLAG</strong>
+          </div>
+          <button class="hint-toggle" onclick="toggleHint(1)">&#9654; SHOW HINT</button>
+          <div class="hint-box" id="hint-1">
+            The flag is in an HTML comment near the very top of the file. Open View Page Source, hit Ctrl+F, and type FLAG to jump straight to it.
+          </div>
+          <div class="flag-section">
+            <span class="flag-label">&gt; ENTER FLAG:</span>
+            <div class="flag-row">
+              <input type="text" class="flag-input" id="flag-1" placeholder="FLAG{...}" spellcheck="false" autocomplete="off">
+              <button class="submit-btn" onclick="submitFlag(1, 'FLAG{w3lc0me_h4ck3r}', 5)">&gt; SUBMIT</button>
+            </div>
+            <div class="flag-feedback" id="feedback-1"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────
+         CH 02 — CAESAR CIPHER
+    ────────────────────────────────────────── -->
+    <div class="challenge-card" id="card-2">
+      <div class="card-header" onclick="toggleCard(2)">
+        <div class="tier-badge tier-recruit">RECRUIT</div>
+        <div class="card-title-block">
+          <div class="card-ch-num">CH.02</div>
+          <div class="card-title">CAESAR'S SECRET</div>
+          <div class="card-subtitle">Break the Ancient Cipher</div>
+        </div>
+        <div class="card-coins">&#9711; 10</div>
+        <div class="card-status status-pending" id="status-2">LOCKED</div>
+        <div class="card-arrow" id="arrow-2">&#9658;</div>
+      </div>
+      <div class="card-body" id="body-2">
+        <div class="card-inner">
+          <div class="completed-banner" id="complete-2">
+            <div class="big-text">&#9646; FLAG CAPTURED &#9646;</div>
+            <div class="coin-earned">+10 COINS AWARDED</div>
+          </div>
+          <div class="ch-desc">
+            Julius Caesar invented one of the world's first ciphers over 2,000 years ago! He shifted each letter of the alphabet by 3 to hide messages from his enemies.<br><br>
+            For example: <code style="color:var(--cyan)">A</code> becomes <code style="color:var(--cyan)">D</code>, <code style="color:var(--cyan)">B</code> becomes <code style="color:var(--cyan)">E</code>, <code style="color:var(--cyan)">Z</code> becomes <code style="color:var(--cyan)">C</code> (it wraps around).<br><br>
+            This encoded message was scrambled using the Caesar cipher. Use the decoder below to crack it!
+          </div>
+          <div class="code-block">IODJ{fdhvdu_lv_b0xu_iu1hqg}</div>
+          <div class="cipher-tool">
+            <label>&gt; DECODE KEY (shift amount: <span id="shift-val">0</span>):</label>
+            <input type="range" min="0" max="25" value="0" id="caesar-slider" oninput="updateCaesar()">
+            <div style="font-size:0.65rem;color:var(--dim);margin-top:4px">Drag the slider. When you find the right shift, you'll see readable text with FLAG{...}</div>
+            <div class="cipher-output" id="caesar-output">IODJ{fdhvdu_lv_b0xu_iu1hqg}</div>
+          </div>
+          <button class="hint-toggle" onclick="toggleHint(2)">&#9654; SHOW HINT</button>
+          <div class="hint-box" id="hint-2">
+            Caesar used a shift of 3 to encode. To decode, you need to shift back by the same amount. The slider goes from 0 to 25 — try dragging it and watch the message change. When you see FLAG{...} with real words, you've found it!
+          </div>
+          <div class="flag-section">
+            <span class="flag-label">&gt; ENTER DECODED FLAG:</span>
+            <div class="flag-row">
+              <input type="text" class="flag-input" id="flag-2" placeholder="FLAG{...}" spellcheck="false" autocomplete="off">
+              <button class="submit-btn" onclick="submitFlag(2, 'FLAG{caesar_is_y0ur_fr1end}', 10)">&gt; SUBMIT</button>
+            </div>
+            <div class="flag-feedback" id="feedback-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────
+         CH 03 — BINARY
+    ────────────────────────────────────────── -->
+    <div class="challenge-card" id="card-3">
+      <div class="card-header" onclick="toggleCard(3)">
+        <div class="tier-badge tier-recruit">RECRUIT</div>
+        <div class="card-title-block">
+          <div class="card-ch-num">CH.03</div>
+          <div class="card-title">BINARY BRO</div>
+          <div class="card-subtitle">Speak the Machine's Language</div>
+        </div>
+        <div class="card-coins">&#9711; 10</div>
+        <div class="card-status status-pending" id="status-3">LOCKED</div>
+        <div class="card-arrow" id="arrow-3">&#9658;</div>
+      </div>
+      <div class="card-body" id="body-3">
+        <div class="card-inner">
+          <div class="completed-banner" id="complete-3">
+            <div class="big-text">&#9646; FLAG CAPTURED &#9646;</div>
+            <div class="coin-earned">+10 COINS AWARDED</div>
+          </div>
+          <div class="ch-desc">
+            Computers only understand 1s and 0s — this is called <strong>binary</strong>. Every letter has a number (called its ASCII code), and that number can be written in binary.<br><br>
+            For example: The letter <code style="color:var(--cyan)">A</code> = 65 in decimal = <code style="color:var(--cyan)">01000001</code> in binary.<br><br>
+            Decode this binary message — each group of 8 bits is one character:
+          </div>
+          <div class="binary-display">01000110 01001100 01000001 01000111 01111011 01100010 00110001 01110100 01110011 01011111 01100001 01101110 01100100 01011111 01100010 01111001 01110100 00110011 01110011 01111101</div>
+          <div class="info-box">
+            <strong>QUICK REFERENCE:</strong><br>
+            01000110 = F &nbsp;|&nbsp; 01001100 = L &nbsp;|&nbsp; 01000001 = A &nbsp;|&nbsp; 01000111 = G<br>
+            You can search online for a "binary to text converter" to help you!
+          </div>
+          <button class="hint-toggle" onclick="toggleHint(3)">&#9654; SHOW HINT</button>
+          <div class="hint-box" id="hint-3">
+            The first 4 groups decode to F, L, A, G — which means the message starts with FLAG! Convert the rest of the binary groups to find the full flag. Try a free binary-to-text tool online, or work it out group by group using an ASCII table.
+          </div>
+          <div class="flag-section">
+            <span class="flag-label">&gt; ENTER DECODED FLAG:</span>
+            <div class="flag-row">
+              <input type="text" class="flag-input" id="flag-3" placeholder="FLAG{...}" spellcheck="false" autocomplete="off">
+              <button class="submit-btn" onclick="submitFlag(3, 'FLAG{b1ts_and_byt3s}', 10)">&gt; SUBMIT</button>
+            </div>
+            <div class="flag-feedback" id="feedback-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────
+         CH 04 — BASE64
+    ────────────────────────────────────────── -->
+    <div class="challenge-card" id="card-4">
+      <div class="card-header" onclick="toggleCard(4)">
+        <div class="tier-badge tier-recruit">RECRUIT</div>
+        <div class="card-title-block">
+          <div class="card-ch-num">CH.04</div>
+          <div class="card-title">SECRET DECODER</div>
+          <div class="card-subtitle">Unscramble Base64 Encoding</div>
+        </div>
+        <div class="card-coins">&#9711; 15</div>
+        <div class="card-status status-pending" id="status-4">LOCKED</div>
+        <div class="card-arrow" id="arrow-4">&#9658;</div>
+      </div>
+      <div class="card-body" id="body-4">
+        <div class="card-inner">
+          <div class="completed-banner" id="complete-4">
+            <div class="big-text">&#9646; FLAG CAPTURED &#9646;</div>
+            <div class="coin-earned">+15 COINS AWARDED</div>
+          </div>
+          <div class="ch-desc">
+            <strong>Base64</strong> is a way of encoding data so it can be safely sent over the internet. You've probably seen it without knowing — email attachments and images on websites often use it.<br><br>
+            It uses letters (A-Z, a-z), numbers (0-9), plus <code>+</code> and <code>/</code>. It often ends with <code>=</code> signs.<br><br>
+            Decode this Base64 string to find the flag:
+          </div>
+          <div class="code-block">RkxBR3tiYXM2NF9pczBfY29vbH0=</div>
+          <div class="cipher-tool">
+            <label>&gt; BUILT-IN BASE64 DECODER:</label>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <input type="text" id="b64-input" class="flag-input" style="flex:1" placeholder="Paste Base64 here..." oninput="decodeB64()">
+            </div>
+            <div class="cipher-output" id="b64-output" style="margin-top:8px;color:#aaa;font-size:0.75rem">Decoded text will appear here...</div>
+          </div>
+          <button class="hint-toggle" onclick="toggleHint(4)">&#9654; SHOW HINT</button>
+          <div class="hint-box" id="hint-4">
+            Paste the Base64 string into the decoder above. You can also search online for "Base64 decoder" and paste it there. The decoded result will contain the flag!
+          </div>
+          <div class="flag-section">
+            <span class="flag-label">&gt; ENTER DECODED FLAG:</span>
+            <div class="flag-row">
+              <input type="text" class="flag-input" id="flag-4" placeholder="FLAG{...}" spellcheck="false" autocomplete="off">
+              <button class="submit-btn" onclick="submitFlag(4, 'FLAG{bas64_is0_cool}', 15)">&gt; SUBMIT</button>
+            </div>
+            <div class="flag-feedback" id="feedback-4"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────
+         CH 05 — INVISIBLE INK (STEGANOGRAPHY)
+    ────────────────────────────────────────── -->
+    <div class="challenge-card" id="card-5">
+      <div class="card-header" onclick="toggleCard(5)">
+        <div class="tier-badge tier-hacker">HACKER</div>
+        <div class="card-title-block">
+          <div class="card-ch-num">CH.05</div>
+          <div class="card-title">INVISIBLE INK</div>
+          <div class="card-subtitle">Hidden in Plain Sight</div>
+        </div>
+        <div class="card-coins">&#9711; 20</div>
+        <div class="card-status status-pending" id="status-5">LOCKED</div>
+        <div class="card-arrow" id="arrow-5">&#9658;</div>
+      </div>
+      <div class="card-body" id="body-5">
+        <div class="card-inner">
+          <div class="completed-banner" id="complete-5">
+            <div class="big-text">&#9646; FLAG CAPTURED &#9646;</div>
+            <div class="coin-earned">+20 COINS AWARDED</div>
+          </div>
+          <div class="ch-desc">
+            <strong>Steganography</strong> is the art of hiding messages in plain sight. Unlike encryption (which scrambles a message), steganography <em>hides</em> the message so nobody even knows it exists.<br><br>
+            Someone hid the flag in the text block below. It looks like a normal message — but there's something invisible lurking inside.<br><br>
+            <strong>Your mission:</strong> Select ALL the text in the box below (click inside, then Ctrl+A or Cmd+A) and look very carefully...
+          </div>
+          <div class="stego-box" id="stego-box">
+            Welcome to the training ground, young hacker. <span class="hidden-flag">FLAG{s3l3ct_all_t3xt}</span> Today you will learn that not everything is as it appears. Sometimes the most important information is invisible to the naked eye. A true hacker always looks deeper than the surface. Keep your eyes open and your mind sharp. The truth is always hidden somewhere — you just have to know where to look.
+          </div>
+          <div class="info-box">
+            Try clicking inside the text box above and pressing <kbd style="background:#222;padding:1px 5px;border:1px solid #444">Ctrl+A</kbd> to select all text. Look for anything that appears when selected!
+          </div>
+          <button class="hint-toggle" onclick="toggleHint(5)">&#9654; SHOW HINT</button>
+          <div class="hint-box" id="hint-5">
+            The hidden text is the same colour as the background — making it invisible until you select it. Select all the text in the box. Something will appear highlighted that was invisible before! Copy it carefully.
+          </div>
+          <div class="flag-section">
+            <span class="flag-label">&gt; ENTER HIDDEN FLAG:</span>
+            <div class="flag-row">
+              <input type="text" class="flag-input" id="flag-5" placeholder="FLAG{...}" spellcheck="false" autocomplete="off">
+              <button class="submit-btn" onclick="submitFlag(5, 'FLAG{s3l3ct_all_t3xt}', 20)">&gt; SUBMIT</button>
+            </div>
+            <div class="flag-feedback" id="feedback-5"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────
+         CH 06 — DEVTOOLS (INSPECTOR)
+    ────────────────────────────────────────── -->
+    <div class="challenge-card" id="card-6">
+      <div class="card-header" onclick="toggleCard(6)">
+        <div class="tier-badge tier-hacker">HACKER</div>
+        <div class="card-title-block">
+          <div class="card-ch-num">CH.06</div>
+          <div class="card-title">THE INSPECTOR</div>
+          <div class="card-subtitle">Peek Under the Hood</div>
+        </div>
+        <div class="card-coins">&#9711; 20</div>
+        <div class="card-status status-pending" id="status-6">LOCKED</div>
+        <div class="card-arrow" id="arrow-6">&#9658;</div>
+      </div>
+      <div class="card-body" id="body-6">
+        <div class="card-inner">
+          <div class="completed-banner" id="complete-6">
+            <div class="big-text">&#9646; FLAG CAPTURED &#9646;</div>
+            <div class="coin-earned">+20 COINS AWARDED</div>
+          </div>
+          <div class="ch-desc">
+            Every browser has <strong>Developer Tools</strong> (DevTools) built in — it's like an X-ray machine for websites. Professional developers AND hackers use DevTools to see exactly what's happening under the surface of a webpage.<br><br>
+            There's a locked button below. You can't click it. But the flag is hidden inside its HTML code as a secret attribute. Use the browser's inspector to find it!
+          </div>
+          <div class="locked-box">
+            <span class="locked-label">// ACCESS RESTRICTED //</span>
+            <button class="locked-btn" disabled data-secret="FLAG{d3v_t00ls_ar3_p0w3r}" id="secret-button">
+              [CLASSIFIED DATA - LOCKED]
+            </button>
+            <div style="font-size:0.65rem;color:#555;margin-top:10px;letter-spacing:0.08em">This button contains a secret attribute. Can you find it?</div>
+          </div>
+          <div class="info-box">
+            <strong>HOW TO INSPECT:</strong><br>
+            Right-click on the locked button above &rarr; "Inspect" or "Inspect Element"<br>
+            Look at the HTML in the panel that appears. Find the attribute called <code>data-secret</code>
+          </div>
+          <button class="hint-toggle" onclick="toggleHint(6)">&#9654; SHOW HINT</button>
+          <div class="hint-box" id="hint-6">
+            In the DevTools inspector, you'll see something like: <code style="color:var(--cyan)">data-secret="FLAG{...}"</code> right there in the button's HTML. The flag is the value inside the quotes!
+          </div>
+          <div class="flag-section">
+            <span class="flag-label">&gt; ENTER FLAG FROM data-secret:</span>
+            <div class="flag-row">
+              <input type="text" class="flag-input" id="flag-6" placeholder="FLAG{...}" spellcheck="false" autocomplete="off">
+              <button class="submit-btn" onclick="submitFlag(6, 'FLAG{d3v_t00ls_ar3_p0w3r}', 20)">&gt; SUBMIT</button>
+            </div>
+            <div class="flag-feedback" id="feedback-6"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────
+         CH 07 — HEX DECODING
+    ────────────────────────────────────────── -->
+    <div class="challenge-card" id="card-7">
+      <div class="card-header" onclick="toggleCard(7)">
+        <div class="tier-badge tier-hacker">HACKER</div>
+        <div class="card-title-block">
+          <div class="card-ch-num">CH.07</div>
+          <div class="card-title">HEX DETECTIVE</div>
+          <div class="card-subtitle">Decode Hexadecimal</div>
+        </div>
+        <div class="card-coins">&#9711; 25</div>
+        <div class="card-status status-pending" id="status-7">LOCKED</div>
+        <div class="card-arrow" id="arrow-7">&#9658;</div>
+      </div>
+      <div class="card-body" id="body-7">
+        <div class="card-inner">
+          <div class="completed-banner" id="complete-7">
+            <div class="big-text">&#9646; FLAG CAPTURED &#9646;</div>
+            <div class="coin-earned">+25 COINS AWARDED</div>
+          </div>
+          <div class="ch-desc">
+            <strong>Hexadecimal</strong> (hex) is a numbering system that uses 16 symbols: <code>0-9</code> and <code>A-F</code>. Hackers and programmers use it all the time — you'll see it in memory addresses, colour codes (#FF0000 = red), and encoded data.<br><br>
+            Every two hex digits represent one character. For example: <code style="color:var(--cyan)">46</code> = 70 in decimal = the letter <code>'F'</code>.<br><br>
+            Decode this hex string to find the flag:
+          </div>
+          <div class="code-block">464c41477b6830785f31735f6330306c7d</div>
+          <div class="cipher-tool">
+            <label>&gt; BUILT-IN HEX DECODER:</label>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <input type="text" id="hex-input" class="flag-input" style="flex:1" placeholder="Paste hex here..." oninput="decodeHex()">
+            </div>
+            <div class="cipher-output" id="hex-output" style="margin-top:8px;color:#aaa;font-size:0.75rem">Decoded text will appear here...</div>
+          </div>
+          <button class="hint-toggle" onclick="toggleHint(7)">&#9654; SHOW HINT</button>
+          <div class="hint-box" id="hint-7">
+            Paste the hex string into the decoder above. Remember: every 2 characters = 1 letter. You can also search "hex to text decoder" online. The string starts with 46 4c 41 47 — can you guess what those spell?
+          </div>
+          <div class="flag-section">
+            <span class="flag-label">&gt; ENTER DECODED FLAG:</span>
+            <div class="flag-row">
+              <input type="text" class="flag-input" id="flag-7" placeholder="FLAG{...}" spellcheck="false" autocomplete="off">
+              <button class="submit-btn" onclick="submitFlag(7, 'FLAG{h0x_1s_c00l}', 25)">&gt; SUBMIT</button>
+            </div>
+            <div class="flag-feedback" id="feedback-7"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────
+         CH 08 — ROBOTS.TXT
+    ────────────────────────────────────────── -->
+    <div class="challenge-card" id="card-8">
+      <div class="card-header" onclick="toggleCard(8)">
+        <div class="tier-badge tier-hacker">HACKER</div>
+        <div class="card-title-block">
+          <div class="card-ch-num">CH.08</div>
+          <div class="card-title">ROBOTS ONLY</div>
+          <div class="card-subtitle">Web Reconnaissance</div>
+        </div>
+        <div class="card-coins">&#9711; 25</div>
+        <div class="card-status status-pending" id="status-8">LOCKED</div>
+        <div class="card-arrow" id="arrow-8">&#9658;</div>
+      </div>
+      <div class="card-body" id="body-8">
+        <div class="card-inner">
+          <div class="completed-banner" id="complete-8">
+            <div class="big-text">&#9646; FLAG CAPTURED &#9646;</div>
+            <div class="coin-earned">+25 COINS AWARDED</div>
+          </div>
+          <div class="ch-desc">
+            Most websites have a secret file called <strong>robots.txt</strong>. It tells search engine robots (like Google) which pages they're NOT allowed to visit. But here's the twist — it's a public file! Anyone can read it.<br><br>
+            Hackers use <code>robots.txt</code> during <strong>reconnaissance</strong> (information gathering) because it often reveals hidden pages the website owner didn't want anyone to find.<br><br>
+            Below is a simulated terminal session. Read the robots.txt output carefully — it reveals a secret location!
+          </div>
+          <div class="terminal-sim">
+            <div class="terminal-titlebar">// SIMULATED TERMINAL — hackacademy.local</div>
+            <div class="terminal-body">
+              <span class="prompt-sym">$</span> <span class="cmd">curl hackacademy.local/robots.txt</span><br><br>
+              <span class="response">User-agent: *</span><br>
+              <span class="response">Disallow: /admin</span><br>
+              <span class="response">Disallow: /private</span><br>
+              <span class="response">Disallow: <span class="secret-path" onclick="revealRobotsFlag()">/secret-vault/flag.txt</span></span><br><br>
+              <span class="prompt-sym">$</span> <span class="cmd">curl hackacademy.local<span class="secret-path" onclick="revealRobotsFlag()">/secret-vault/flag.txt</span></span><br><br>
+              <div id="robots-flag-reveal" style="display:none">
+                <span class="response" style="color:#ffd700">Access granted. Contents of /secret-vault/flag.txt:</span><br>
+                <span class="response" style="color:#00ff41;font-size:1rem">FLAG{r0b0ts_kn0w_s3cr3ts}</span>
+              </div>
+              <div id="robots-flag-prompt" style="color:#555;font-size:0.75rem">[Click the highlighted path above to fetch the secret file...]</div>
+            </div>
+          </div>
+          <button class="hint-toggle" onclick="toggleHint(8)">&#9654; SHOW HINT</button>
+          <div class="hint-box" id="hint-8">
+            Click on the <span style="color:var(--gold)">highlighted path</span> in the terminal simulation above. It simulates fetching the secret file that the robots.txt was hiding!
+          </div>
+          <div class="flag-section">
+            <span class="flag-label">&gt; ENTER FLAG FROM THE SECRET FILE:</span>
+            <div class="flag-row">
+              <input type="text" class="flag-input" id="flag-8" placeholder="FLAG{...}" spellcheck="false" autocomplete="off">
+              <button class="submit-btn" onclick="submitFlag(8, 'FLAG{r0b0ts_kn0w_s3cr3ts}', 25)">&gt; SUBMIT</button>
+            </div>
+            <div class="flag-feedback" id="feedback-8"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────
+         CH 09 — LOGIC VAULT
+    ────────────────────────────────────────── -->
+    <div class="challenge-card" id="card-9">
+      <div class="card-header" onclick="toggleCard(9)">
+        <div class="tier-badge tier-elite">ELITE</div>
+        <div class="card-title-block">
+          <div class="card-ch-num">CH.09</div>
+          <div class="card-title">THE LOGIC VAULT</div>
+          <div class="card-subtitle">Crack the Code with Your Brain</div>
+        </div>
+        <div class="card-coins">&#9711; 40</div>
+        <div class="card-status status-pending" id="status-9">LOCKED</div>
+        <div class="card-arrow" id="arrow-9">&#9658;</div>
+      </div>
+      <div class="card-body" id="body-9">
+        <div class="card-inner">
+          <div class="completed-banner" id="complete-9">
+            <div class="big-text">&#9646; FLAG CAPTURED &#9646;</div>
+            <div class="coin-earned">+40 COINS AWARDED</div>
+          </div>
+          <div class="ch-desc">
+            No tools needed for this one — just your brain! A secret vault is locked with a 4-digit code. Solve the 4 clues below to find each digit. Enter your answers in the boxes, and when all 4 are correct the vault will open and reveal the flag.
+          </div>
+          <div class="vault-clues">
+            <div class="clue-row">
+              <span class="clue-num">01</span>
+              <span class="clue-text">How many sides does a <strong>hexagon</strong> have?</span>
+              <input type="number" class="clue-input" id="clue-1" min="0" max="9" placeholder="?" oninput="checkClues()">
+              <span class="clue-check" id="check-1"></span>
+            </div>
+            <div class="clue-row">
+              <span class="clue-num">02</span>
+              <span class="clue-text">The letter <strong>'A'</strong> has ASCII code <strong>65</strong>. What is 65 divided by 13?</span>
+              <input type="number" class="clue-input" id="clue-2" min="0" max="9" placeholder="?" oninput="checkClues()">
+              <span class="clue-check" id="check-2"></span>
+            </div>
+            <div class="clue-row">
+              <span class="clue-num">03</span>
+              <span class="clue-text">Convert binary <strong>0011</strong> to decimal (base 10)</span>
+              <input type="number" class="clue-input" id="clue-3" min="0" max="9" placeholder="?" oninput="checkClues()">
+              <span class="clue-check" id="check-3"></span>
+            </div>
+            <div class="clue-row">
+              <span class="clue-num">04</span>
+              <span class="clue-text">A byte has <strong>8 bits</strong>. What is 8 minus 2?</span>
+              <input type="number" class="clue-input" id="clue-4" min="0" max="9" placeholder="?" oninput="checkClues()">
+              <span class="clue-check" id="check-4"></span>
+            </div>
+          </div>
+          <div class="vault-reveal" id="vault-reveal">
+            <div style="font-size:0.7rem;letter-spacing:0.15em;color:var(--dim)">// VAULT CRACKED //</div>
+            <div style="margin:8px 0;font-size:0.8rem;color:#aaccaa">Code accepted. Retrieving classified data...</div>
+            <div class="vault-flag">FLAG{l0g1c_1s_y0ur_w3ap0n}</div>
+          </div>
+          <button class="hint-toggle" onclick="toggleHint(9)">&#9654; SHOW HINT</button>
+          <div class="hint-box" id="hint-9">
+            Clue 1: Count the sides of a 6-sided shape.<br>
+            Clue 2: 65 &divide; 13 = ? (no remainder — it divides evenly)<br>
+            Clue 3: Binary 0011: the rightmost bit = 1 (ones), next = 1 (twos), so it's 2+1 = 3<br>
+            Clue 4: Simple subtraction!
+          </div>
+          <div class="flag-section">
+            <span class="flag-label">&gt; ENTER FLAG FROM THE VAULT:</span>
+            <div class="flag-row">
+              <input type="text" class="flag-input" id="flag-9" placeholder="FLAG{...}" spellcheck="false" autocomplete="off">
+              <button class="submit-btn" onclick="submitFlag(9, 'FLAG{l0g1c_1s_y0ur_w3ap0n}', 40)">&gt; SUBMIT</button>
+            </div>
+            <div class="flag-feedback" id="feedback-9"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────
+         CH 10 — MASTER HACKER (MULTI-STEP)
+    ────────────────────────────────────────── -->
+    <div class="challenge-card" id="card-10">
+      <div class="card-header" onclick="toggleCard(10)">
+        <div class="tier-badge tier-elite">ELITE</div>
+        <div class="card-title-block">
+          <div class="card-ch-num">CH.10</div>
+          <div class="card-title">MASTER HACKER</div>
+          <div class="card-subtitle">The Final Boss — All Skills Combined</div>
+        </div>
+        <div class="card-coins">&#9711; 65</div>
+        <div class="card-status status-pending" id="status-10">LOCKED</div>
+        <div class="card-arrow" id="arrow-10">&#9658;</div>
+      </div>
+      <div class="card-body" id="body-10">
+        <div class="card-inner">
+          <div class="completed-banner" id="complete-10">
+            <div class="big-text">&#9646; ALL FLAGS CAPTURED &#9646;</div>
+            <div class="coin-earned">+65 COINS | CYBER LEGEND UNLOCKED</div>
+          </div>
+          <div class="ch-desc">
+            This is the final challenge. It requires everything you've learned.<br><br>
+            The flag is hidden behind <strong>two layers of encoding</strong>. You must decode them in order — the output of Step 1 gives you what you need for Step 2. Use your skills!
+          </div>
+          <div class="step-box">
+            <div class="step-num">STEP 1 OF 2 — BASE64</div>
+            <div class="step-desc">Decode this Base64 string. The result will contain your next clue:</div>
+            <div class="code-block" id="ch10-b64">loading...</div>
+          </div>
+          <div class="step-box">
+            <div class="step-num">STEP 2 OF 2 — HEX</div>
+            <div class="step-desc">The Base64 decoded message contains a hex string. Decode that hex string to reveal the flag.</div>
+            <div class="cipher-tool" style="margin-top:8px">
+              <label>&gt; DECODE STEP 1 RESULT:</label>
+              <input type="text" id="master-b64" class="flag-input" style="margin:8px 0;display:block;width:100%" placeholder="Paste the Base64 decoded text here..." oninput="decodeMaster()">
+              <label style="margin-top:8px">&gt; THEN DECODE THE HEX INSIDE IT:</label>
+              <input type="text" id="master-hex" class="flag-input" style="margin:8px 0;display:block;width:100%" placeholder="Paste the hex string here..." oninput="decodeMasterHex()">
+              <div class="cipher-output" id="master-output" style="margin-top:8px;color:#aaa;font-size:0.75rem">Flag will appear here when you decode both steps...</div>
+            </div>
+          </div>
+          <button class="hint-toggle" onclick="toggleHint(10)">&#9654; SHOW HINT</button>
+          <div class="hint-box" id="hint-10">
+            Step 1: Use the Base64 decoder (built-in tool from Challenge 4, or online) on the code shown above. You'll get a text message with a hex string inside it.<br><br>
+            Step 2: Copy just the hex string from that message. Use the Hex decoder (built-in tool from Challenge 7, or online) to decode it. That gives you the flag!
+          </div>
+          <div class="flag-section">
+            <span class="flag-label">&gt; ENTER FINAL FLAG:</span>
+            <div class="flag-row">
+              <input type="text" class="flag-input" id="flag-10" placeholder="FLAG{...}" spellcheck="false" autocomplete="off">
+              <button class="submit-btn" onclick="submitFlag(10, 'FLAG{y0u_ar3_th3_m4st3r}', 65)">&gt; SUBMIT</button>
+            </div>
+            <div class="flag-feedback" id="feedback-10"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end challenges -->
+
+  <!-- BADGES -->
+  <div class="badges-section">
+    <div class="badges-title">&gt; ACHIEVEMENTS &amp; BADGES</div>
+    <div class="badges-grid">
+      <div class="badge" id="badge-first-blood">
+        <span class="badge-icon">[!]</span>
+        FIRST BLOOD
+      </div>
+      <div class="badge" id="badge-cipher-king">
+        <span class="badge-icon">[#]</span>
+        CIPHER KING
+      </div>
+      <div class="badge" id="badge-inspector">
+        <span class="badge-icon">[?]</span>
+        INSPECTOR
+      </div>
+      <div class="badge" id="badge-bot-whisperer">
+        <span class="badge-icon">[R]</span>
+        BOT WHISPERER
+      </div>
+      <div class="badge" id="badge-logic-master">
+        <span class="badge-icon">[L]</span>
+        LOGIC MASTER
+      </div>
+      <div class="badge" id="badge-legend">
+        <span class="badge-icon">[*]</span>
+        THE LEGEND
+      </div>
+    </div>
+  </div>
+
+</div><!-- end #app -->
+
+<!-- PROGRESS BAR -->
+<div id="progress-bar">
+  <span class="progress-label">FLAGS CAPTURED:</span>
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+  <span class="progress-count" id="progress-count">0 / 10</span>
+</div>
+
+<!-- ═════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════= -->
+<script>
+'use strict';
+
+// ─────────────────────────────────────────────
+// STORAGE
+// ─────────────────────────────────────────────
+const S = {
+  get: (k, def) => { try { const v = localStorage.getItem(k); return v === null ? def : JSON.parse(v); } catch { return def; } },
+  set: (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+};
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let profile = {
+  nickname: S.get('ctf_nickname', ''),
+  avatar: S.get('ctf_avatar', 0),
+  color: S.get('ctf_color', '#00ff41'),
+};
+let coins = S.get('ctf_coins', 0);
+let completed = new Set(S.get('ctf_completed', []));
+let hintsUsed = new Set(S.get('ctf_hints_used', []));
+
+const AVATARS = ['[X]', '[*]', '[#]', '[@]', '[^]', '[~]'];
+const RANKS = [
+  { min: 0,   max: 20,  label: 'SCRIPT KIDDIE' },
+  { min: 21,  max: 60,  label: 'JUNIOR HACKER' },
+  { min: 61,  max: 120, label: 'HACKER' },
+  { min: 121, max: 200, label: 'ELITE HACKER' },
+  { min: 201, max: 999, label: 'CYBER LEGEND ★' },
+];
+
+// ─────────────────────────────────────────────
+// BOOT SEQUENCE
+// ─────────────────────────────────────────────
+function runBoot() {
+  const lines = ['bl1','bl2','bl3','bl4','bl5','bl6'];
+  const delays = [200, 700, 1300, 1800, 2300, 2900];
+  lines.forEach((id, i) => {
+    setTimeout(() => document.getElementById(id).classList.add('show'), delays[i]);
+  });
+  setTimeout(() => {
+    const boot = document.getElementById('boot');
+    boot.classList.add('fade-out');
+    setTimeout(() => {
+      boot.style.display = 'none';
+      document.getElementById('app').classList.add('show');
+      if (!profile.nickname) showProfileModal(false);
+    }, 800);
+  }, 3600);
+}
+
+// ─────────────────────────────────────────────
+// PROFILE MODAL
+// ─────────────────────────────────────────────
+let selectedAvatar = profile.avatar;
+let selectedColor = profile.color;
+
+function showProfileModal(isSettings) {
+  const modal = document.getElementById('modal-backdrop');
+  const resetBtn = document.getElementById('reset-btn');
+  const resetDiv = document.getElementById('reset-divider');
+  modal.classList.add('show');
+
+  // Pre-fill
+  document.getElementById('nickname-input').value = profile.nickname || '';
+  updateAvatarSelection(profile.avatar);
+  updateColorSelection(profile.color);
+
+  if (isSettings) {
+    resetBtn.style.display = 'block';
+    resetDiv.style.display = 'block';
+  } else {
+    resetBtn.style.display = 'none';
+    resetDiv.style.display = 'none';
+  }
+}
+
+function updateAvatarSelection(idx) {
+  selectedAvatar = idx;
+  document.querySelectorAll('.avatar-btn').forEach(b => {
+    b.classList.toggle('selected', parseInt(b.dataset.avatar) === idx);
+  });
+}
+
+function updateColorSelection(color) {
+  selectedColor = color;
+  document.querySelectorAll('.color-btn').forEach(b => {
+    b.classList.toggle('selected', b.dataset.color === color);
+  });
+  applyAccent(color);
+}
+
+function applyAccent(color) {
+  document.documentElement.style.setProperty('--accent', color);
+}
+
+document.querySelectorAll('.avatar-btn').forEach(btn => {
+  btn.addEventListener('click', () => updateAvatarSelection(parseInt(btn.dataset.avatar)));
+});
+
+document.querySelectorAll('.color-btn').forEach(btn => {
+  btn.addEventListener('click', () => updateColorSelection(btn.dataset.color));
+});
+
+document.getElementById('save-profile-btn').addEventListener('click', () => {
+  const name = document.getElementById('nickname-input').value.trim();
+  if (!name) { document.getElementById('nickname-input').focus(); return; }
+  profile.nickname = name;
+  profile.avatar = selectedAvatar;
+  profile.color = selectedColor;
+  S.set('ctf_nickname', name);
+  S.set('ctf_avatar', selectedAvatar);
+  S.set('ctf_color', selectedColor);
+  document.getElementById('modal-backdrop').classList.remove('show');
+  renderHUD();
+});
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  if (!confirm('RESET ALL PROGRESS? This cannot be undone!')) return;
+  ['ctf_nickname','ctf_avatar','ctf_color','ctf_coins','ctf_completed','ctf_hints_used']
+    .forEach(k => localStorage.removeItem(k));
+  location.reload();
+});
+
+function openSettings() { showProfileModal(true); }
+
+// Close modal clicking backdrop
+document.getElementById('modal-backdrop').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-backdrop') && profile.nickname) {
+    document.getElementById('modal-backdrop').classList.remove('show');
+  }
+});
+
+// ─────────────────────────────────────────────
+// HUD RENDER
+// ─────────────────────────────────────────────
+function getRank(c) {
+  return RANKS.find(r => c >= r.min && c <= r.max)?.label || 'SCRIPT KIDDIE';
+}
+
+function renderHUD() {
+  document.getElementById('hud-avatar').textContent = AVATARS[profile.avatar] || '[X]';
+  document.getElementById('hud-nickname').textContent = profile.nickname || 'HACKER';
+  document.getElementById('coin-count').textContent = coins;
+  document.getElementById('hud-rank').textContent = getRank(coins);
+  applyAccent(profile.color);
+}
+
+// ─────────────────────────────────────────────
+// CHALLENGE CARDS — EXPAND / COLLAPSE
+// ─────────────────────────────────────────────
+const openCards = new Set();
+
+function toggleCard(id) {
+  const body = document.getElementById(`body-${id}`);
+  const arrow = document.getElementById(`arrow-${id}`);
+  if (openCards.has(id)) {
+    openCards.delete(id);
+    body.classList.remove('open');
+    arrow.classList.remove('open');
+  } else {
+    openCards.add(id);
+    body.classList.add('open');
+    arrow.classList.add('open');
+  }
+}
+
+// ─────────────────────────────────────────────
+// HINT SYSTEM
+// ─────────────────────────────────────────────
+function toggleHint(id) {
+  const box = document.getElementById(`hint-${id}`);
+  const btn = box.previousElementSibling;
+  const isShowing = box.classList.toggle('show');
+  btn.textContent = isShowing ? '&#9660; HIDE HINT' : '&#9654; SHOW HINT';
+  btn.innerHTML = isShowing ? '&#9660; HIDE HINT' : '&#9654; SHOW HINT';
+  if (isShowing) {
+    hintsUsed.add(id);
+    S.set('ctf_hints_used', [...hintsUsed]);
+  }
+}
+
+// ─────────────────────────────────────────────
+// FLAG SUBMISSION
+// ─────────────────────────────────────────────
+function submitFlag(id, correctFlag, coinValue) {
+  if (completed.has(id)) return;
+  const input = document.getElementById(`flag-${id}`);
+  const feedback = document.getElementById(`feedback-${id}`);
+  const submitted = input.value.trim();
+
+  if (submitted === correctFlag) {
+    // SUCCESS
+    completed.add(id);
+    coins += coinValue;
+    S.set('ctf_completed', [...completed]);
+    S.set('ctf_coins', coins);
+
+    feedback.textContent = `>> FLAG ACCEPTED! +${coinValue} COINS AWARDED`;
+    feedback.className = 'flag-feedback feedback-ok';
+    input.disabled = true;
+    input.nextElementSibling.disabled = true;
+
+    document.getElementById(`complete-${id}`).classList.add('show');
+    document.getElementById(`status-${id}`).textContent = 'COMPLETE';
+    document.getElementById(`status-${id}`).className = 'card-status status-done';
+    document.getElementById(`card-${id}`).classList.add('completed');
+
+    // Flash animation
+    document.getElementById(`card-${id}`).classList.add('flash-success');
+    setTimeout(() => document.getElementById(`card-${id}`).classList.remove('flash-success'), 600);
+
+    // Coin animation
+    animateCoins(coinValue);
+    spawnCoinParticles();
+
+    // Update HUD
+    renderHUD();
+    updateProgress();
+    checkBadges();
+
+    // Check if all done
+    if (completed.size === 10) {
+      setTimeout(() => document.getElementById('celebrate').classList.add('show'), 1200);
+    }
+  } else {
+    // FAIL
+    feedback.textContent = '>> ACCESS DENIED. Wrong flag. Try again.';
+    feedback.className = 'flag-feedback feedback-err';
+    document.getElementById(`card-${id}`).classList.add('shake');
+    setTimeout(() => document.getElementById(`card-${id}`).classList.remove('shake'), 500);
+    input.select();
+  }
+}
+
+function animateCoins(amount) {
+  const el = document.getElementById('coin-count');
+  const start = coins - amount;
+  const end = coins;
+  let current = start;
+  const step = Math.max(1, Math.ceil(amount / 20));
+  const interval = setInterval(() => {
+    current = Math.min(current + step, end);
+    el.textContent = current;
+    if (current >= end) clearInterval(interval);
+  }, 30);
+  el.classList.add('pop');
+  setTimeout(() => el.classList.remove('pop'), 500);
+  document.getElementById('hud-rank').textContent = getRank(end);
+}
+
+function spawnCoinParticles() {
+  const hud = document.getElementById('hud-coins');
+  const rect = hud.getBoundingClientRect();
+  for (let i = 0; i < 6; i++) {
+    setTimeout(() => {
+      const p = document.createElement('div');
+      p.className = 'coin-particle';
+      p.textContent = '+';
+      p.style.left = (rect.left + Math.random() * 60 - 10) + 'px';
+      p.style.top = (rect.top + 10) + 'px';
+      p.style.color = '#ffd700';
+      p.style.fontFamily = 'var(--font)';
+      p.style.fontWeight = 'bold';
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 1300);
+    }, i * 80);
+  }
+}
+
+// ─────────────────────────────────────────────
+// PROGRESS BAR
+// ─────────────────────────────────────────────
+function updateProgress() {
+  const pct = (completed.size / 10) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-count').textContent = `${completed.size} / 10`;
+}
+
+// ─────────────────────────────────────────────
+// BADGES
+// ─────────────────────────────────────────────
+function checkBadges() {
+  if (completed.has(1)) earn('badge-first-blood');
+  if (completed.has(2) && completed.has(4) && completed.has(7)) earn('badge-cipher-king');
+  if (completed.has(6)) earn('badge-inspector');
+  if (completed.has(8)) earn('badge-bot-whisperer');
+  if (completed.has(9)) earn('badge-logic-master');
+  if (completed.size === 10) earn('badge-legend');
+}
+
+function earn(id) {
+  document.getElementById(id)?.classList.add('earned');
+}
+
+// ─────────────────────────────────────────────
+// RESTORE COMPLETED STATE ON LOAD
+// ─────────────────────────────────────────────
+function restoreState() {
+  completed.forEach(id => {
+    const input = document.getElementById(`flag-${id}`);
+    if (input) input.disabled = true;
+    const btn = input?.nextElementSibling;
+    if (btn) btn.disabled = true;
+    document.getElementById(`complete-${id}`)?.classList.add('show');
+    const status = document.getElementById(`status-${id}`);
+    if (status) { status.textContent = 'COMPLETE'; status.className = 'card-status status-done'; }
+    document.getElementById(`card-${id}`)?.classList.add('completed');
+    // Re-fill input with flag (for display)
+    const flags = {
+      1: 'FLAG{w3lc0me_h4ck3r}', 2: 'FLAG{caesar_is_y0ur_fr1end}',
+      3: 'FLAG{b1ts_and_byt3s}', 4: 'FLAG{bas64_is0_cool}',
+      5: 'FLAG{s3l3ct_all_t3xt}', 6: 'FLAG{d3v_t00ls_ar3_p0w3r}',
+      7: 'FLAG{h0x_1s_c00l}', 8: 'FLAG{r0b0ts_kn0w_s3cr3ts}',
+      9: 'FLAG{l0g1c_1s_y0ur_w3ap0n}', 10: 'FLAG{y0u_ar3_th3_m4st3r}',
+    };
+    if (input && flags[id]) {
+      input.value = flags[id];
+      const fb = document.getElementById(`feedback-${id}`);
+      if (fb) { fb.textContent = `>> FLAG ACCEPTED! Coins awarded.`; fb.className = 'flag-feedback feedback-ok'; }
+    }
+  });
+}
+
+// ─────────────────────────────────────────────
+// CAESAR CIPHER DECODER
+// ─────────────────────────────────────────────
+const ENCODED_CAESAR = 'IODJ{fdhvdu_lv_b0xu_iu1hqg}';
+
+function caesarDecode(text, shift) {
+  return text.split('').map(ch => {
+    const code = ch.charCodeAt(0);
+    if (code >= 65 && code <= 90) return String.fromCharCode((code - 65 - shift + 26) % 26 + 65);
+    if (code >= 97 && code <= 122) return String.fromCharCode((code - 97 - shift + 26) % 26 + 97);
+    return ch;
+  }).join('');
+}
+
+function updateCaesar() {
+  const shift = parseInt(document.getElementById('caesar-slider').value);
+  document.getElementById('shift-val').textContent = shift;
+  const decoded = caesarDecode(ENCODED_CAESAR, shift);
+  const out = document.getElementById('caesar-output');
+  out.textContent = decoded;
+  out.classList.toggle('found', decoded.includes('FLAG{'));
+}
+
+// ─────────────────────────────────────────────
+// BASE64 DECODER WIDGET (CH04)
+// ─────────────────────────────────────────────
+function decodeB64() {
+  const input = document.getElementById('b64-input').value.trim();
+  const out = document.getElementById('b64-output');
+  if (!input) { out.textContent = 'Decoded text will appear here...'; out.style.color = '#aaa'; return; }
+  try {
+    const decoded = atob(input);
+    out.textContent = decoded;
+    out.style.color = decoded.includes('FLAG{') ? '#ffd700' : '#00ff41';
+  } catch {
+    out.textContent = 'Invalid Base64 — check for typos!';
+    out.style.color = '#ff2055';
+  }
+}
+
+// ─────────────────────────────────────────────
+// HEX DECODER WIDGET (CH07)
+// ─────────────────────────────────────────────
+function decodeHex() {
+  const input = document.getElementById('hex-input').value.trim().replace(/\s/g, '');
+  const out = document.getElementById('hex-output');
+  if (!input) { out.textContent = 'Decoded text will appear here...'; out.style.color = '#aaa'; return; }
+  try {
+    if (input.length % 2 !== 0) throw new Error('odd length');
+    let result = '';
+    for (let i = 0; i < input.length; i += 2) {
+      const byte = parseInt(input.substr(i, 2), 16);
+      if (isNaN(byte)) throw new Error('invalid hex');
+      result += String.fromCharCode(byte);
+    }
+    out.textContent = result;
+    out.style.color = result.includes('FLAG{') ? '#ffd700' : '#00ff41';
+  } catch {
+    out.textContent = 'Invalid hex — use only 0-9 and A-F with an even number of characters!';
+    out.style.color = '#ff2055';
+  }
+}
+
+// ─────────────────────────────────────────────
+// ROBOTS.TXT REVEAL (CH08)
+// ─────────────────────────────────────────────
+function revealRobotsFlag() {
+  document.getElementById('robots-flag-reveal').style.display = 'block';
+  document.getElementById('robots-flag-prompt').style.display = 'none';
+}
+
+// ─────────────────────────────────────────────
+// LOGIC VAULT CLUE CHECKER (CH09)
+// ─────────────────────────────────────────────
+const CLUE_ANSWERS = { 1: 6, 2: 5, 3: 3, 4: 6 };
+
+function checkClues() {
+  let allCorrect = true;
+  for (let i = 1; i <= 4; i++) {
+    const val = parseInt(document.getElementById(`clue-${i}`).value);
+    const correct = val === CLUE_ANSWERS[i];
+    const input = document.getElementById(`clue-${i}`);
+    const check = document.getElementById(`check-${i}`);
+    input.classList.toggle('correct', correct);
+    check.textContent = correct ? '[OK]' : '';
+    check.style.color = '#00ff41';
+    if (!correct) allCorrect = false;
+  }
+  document.getElementById('vault-reveal').classList.toggle('show', allCorrect);
+}
+
+// ─────────────────────────────────────────────
+// MASTER HACKER DECODERS (CH10)
+// ─────────────────────────────────────────────
+function decodeMaster() {
+  // This just helps them paste — the real decoding is in decodeMasterHex
+}
+
+function decodeMasterHex() {
+  const input = document.getElementById('master-hex').value.trim().replace(/\s/g, '');
+  const out = document.getElementById('master-output');
+  if (!input) { out.textContent = 'Flag will appear here when you decode both steps...'; out.style.color = '#aaa'; return; }
+  try {
+    if (input.length % 2 !== 0) throw new Error();
+    let result = '';
+    for (let i = 0; i < input.length; i += 2) {
+      const byte = parseInt(input.substr(i, 2), 16);
+      if (isNaN(byte)) throw new Error();
+      result += String.fromCharCode(byte);
+    }
+    out.textContent = result;
+    out.style.color = result.includes('FLAG{') ? '#ffd700' : '#00ff41';
+    if (result.includes('FLAG{')) {
+      document.getElementById('flag-10').value = result.match(/FLAG\{[^}]+\}/)?.[0] || result;
+    }
+  } catch {
+    out.textContent = 'Hmm, that doesn\'t look like valid hex. Check you copied it correctly!';
+    out.style.color = '#ff2055';
+  }
+}
+
+// Set up challenge 10 — compute Base64 of a message containing the hex-encoded flag
+function setupChallenge10() {
+  const hex = Array.from('FLAG{y0u_ar3_th3_m4st3r}')
+    .map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
+  const message = `NICE WORK DECODING THAT! Now decode this hex string to find your flag: ${hex}`;
+  document.getElementById('ch10-b64').textContent = btoa(message);
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+function init() {
+  renderHUD();
+  restoreState();
+  updateProgress();
+  checkBadges();
+  applyAccent(profile.color);
+  setupChallenge10();
+  runBoot();
+}
+
+init();
+</script>
+</body>
+</html>
