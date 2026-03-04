@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HACKER ACADEMY | CTF Training Ground</title>
+<title>Big Macs CTF | CTF Training Ground</title>
 <style>
 /* ═══════════════════════════════════════════════
    RESET & CSS VARIABLES
@@ -20,11 +20,12 @@
   --red: #ff2055;
   --purple: #bf00ff;
   --gold: #ffd700;
-  --dim: #1a3320;
+  --dim: rgba(0,255,65,0.5);
   --dimmer: #0f1f0f;
   --border: rgba(0,255,65,0.18);
   --accent: #00ff41;
   --font: 'Courier New', Courier, monospace;
+  font-size: 16px;
 }
 
 body {
@@ -945,6 +946,185 @@ body::before {
   .card-header { padding: 12px; gap: 8px; }
   .tier-badge { display: none; }
 }
+
+/* ═══════════════════════════════════════════════
+   FONT SIZE OVERRIDES (larger & more readable)
+═══════════════════════════════════════════════ */
+body { font-size: 15px; }
+.boot-line { font-size: 1.1rem !important; }
+.ch-desc { font-size: 1rem; line-height: 1.85; }
+.card-title { font-size: 1.1rem; }
+.card-subtitle { font-size: 0.85rem; }
+.code-block { font-size: 0.95rem; }
+.info-box { font-size: 0.9rem; line-height: 1.75; }
+.flag-input { font-size: 1rem; }
+.flag-label { font-size: 0.85rem; }
+.submit-btn { font-size: 0.85rem; }
+.hud-name { font-size: 0.95rem; }
+.hud-coins { font-size: 1rem; }
+.clue-text { font-size: 0.92rem; }
+.step-desc { font-size: 0.92rem; }
+.cipher-output { font-size: 0.92rem; }
+.terminal-body { font-size: 0.92rem; line-height: 1.85; }
+.flag-feedback { font-size: 0.88rem; }
+.completed-banner .big-text { font-size: 1.15rem; }
+.intro-block { font-size: 0.92rem; line-height: 1.9; }
+.modal-title { font-size: 1.2rem; }
+.form-label { font-size: 0.8rem; }
+.hacker-input { font-size: 1.05rem; }
+
+/* ═══════════════════════════════════════════════
+   TAB BAR
+═══════════════════════════════════════════════ */
+#tab-bar {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  position: sticky;
+  top: 57px;
+  z-index: 900;
+}
+.tab-btn {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--dim);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  letter-spacing: 0.15em;
+  padding: 13px 32px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab-btn:hover { color: var(--accent); }
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  text-shadow: 0 0 8px var(--accent);
+}
+
+/* ═══════════════════════════════════════════════
+   TIPS SYSTEM (replaces free hints)
+═══════════════════════════════════════════════ */
+.tips-section {
+  margin-top: 16px;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+.tips-label {
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  color: var(--dim);
+  display: block;
+  margin-bottom: 10px;
+}
+.tips-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.tip-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--dim);
+  font-family: var(--font);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tip-btn:hover { border-color: var(--gold); color: var(--gold); box-shadow: 0 0 8px rgba(255,215,0,0.2); }
+.tip-btn.purchased { border-color: rgba(255,215,0,0.25); color: rgba(255,215,0,0.45); cursor: default; }
+.tip-btn.purchased:hover { box-shadow: none; }
+.tip-reveal {
+  background: rgba(0,212,255,0.04);
+  border-left: 2px solid rgba(0,212,255,0.4);
+  padding: 10px 14px;
+  margin-top: 6px;
+  font-size: 0.9rem;
+  color: #88cccc;
+  line-height: 1.75;
+  display: none;
+}
+.tip-err {
+  font-size: 0.8rem;
+  color: var(--red);
+  letter-spacing: 0.08em;
+  margin-top: 6px;
+  min-height: 18px;
+}
+
+/* ═══════════════════════════════════════════════
+   SPEED BONUS NOTIFICATION
+═══════════════════════════════════════════════ */
+.speed-bonus-msg {
+  font-size: 0.88rem;
+  color: var(--gold);
+  text-shadow: 0 0 8px var(--gold);
+  letter-spacing: 0.1em;
+  margin-top: 5px;
+  animation: bonusFade 4s ease forwards;
+}
+@keyframes bonusFade {
+  0% { opacity: 1; transform: translateY(0); }
+  75% { opacity: 1; }
+  100% { opacity: 0.3; transform: translateY(-4px); }
+}
+
+/* ═══════════════════════════════════════════════
+   ELITE+ TIER BADGE
+═══════════════════════════════════════════════ */
+.tier-elite2 { border-color: #ff6b35; color: #ff6b35; }
+
+/* ═══════════════════════════════════════════════
+   SCOREBOARD
+═══════════════════════════════════════════════ */
+#scoreboard-view {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 32px 20px;
+  display: none;
+}
+#scoreboard-view.show { display: block; }
+.sb-title {
+  font-size: 1.1rem;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-shadow: 0 0 10px var(--accent);
+  margin-bottom: 6px;
+}
+.sb-sub {
+  font-size: 0.82rem;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+  margin-bottom: 24px;
+}
+.sb-refresh {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--dim);
+  font-family: var(--font);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  padding: 8px 16px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: all 0.2s;
+}
+.sb-refresh:hover { border-color: var(--accent); color: var(--accent); }
+.sb-table { width: 100%; border-collapse: collapse; }
+.sb-table th {
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  color: var(--dim);
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+.sb-table td { font-size: 0.9rem; padding: 11px 12px; border-bottom: 1px solid rgba(0,255,65,0.05); }
+.sb-table tbody tr:first-child td { color: var(--gold); }
+.sb-table tbody tr:nth-child(2) td { color: var(--cyan); }
+.sb-table tbody tr:nth-child(3) td { color: #aaa; }
+.sb-table tbody tr.current-player { background: rgba(0,255,65,0.04); }
+.sb-rank { font-weight: bold; font-size: 1.1rem; min-width: 40px; }
+.sb-empty { text-align: center; padding: 48px; color: var(--dim); font-size: 0.9rem; letter-spacing: 0.1em; }
 </style>
 </head>
 <body>
@@ -953,7 +1133,7 @@ body::before {
 <!-- ║           BOOT SEQUENCE OVERLAY           ║ -->
 <!-- ╚═══════════════════════════════════════════╝ -->
 <div id="boot">
-  <div class="boot-line" id="bl1">&gt; INITIALIZING HACKER ACADEMY v1.0...</div>
+  <div class="boot-line" id="bl1">&gt; INITIALIZING BIG MACS CTF v2.0...</div>
   <div class="boot-line" id="bl2">&gt; LOADING CRYPTOGRAPHIC MODULES......... OK</div>
   <div class="boot-line" id="bl3">&gt; ESTABLISHING SECURE TUNNEL............. OK</div>
   <div class="boot-line" id="bl4">&gt; DECRYPTING CHALLENGE DATABASE.......... OK</div>
@@ -1006,9 +1186,9 @@ body::before {
     <div class="celebrate-title">CYBER LEGEND</div>
     <div style="font-size:0.7rem;letter-spacing:0.2em;color:#aaa;margin-bottom:16px">RANK ACHIEVED</div>
     <div class="celebrate-sub">
-      You have captured all 10 flags and completed<br>
-      every challenge in the HACKER ACADEMY.<br><br>
-      <span style="color:#ffd700">You are a true cyber legend.</span>
+      You have captured all 20 flags and completed<br>
+      every challenge in Big Macs CTF.<br><br>
+      <span style="color:#ffd700">You are a true Cyber Legend. Big Mac earned.</span>
     </div>
     <button class="celebrate-close" onclick="document.getElementById('celebrate').classList.remove('show')">&gt; CONTINUE</button>
   </div>
@@ -1034,6 +1214,12 @@ body::before {
   <button class="hud-settings" onclick="openSettings()">&gt; SETTINGS</button>
 </div>
 
+<!-- TAB BAR -->
+<div id="tab-bar">
+  <button class="tab-btn active" id="tab-challenges" onclick="switchTab('challenges')">&#9670; CHALLENGES</button>
+  <button class="tab-btn" id="tab-scoreboard" onclick="switchTab('scoreboard')">&#9671; SCOREBOARD</button>
+</div>
+
 <!-- ╔═══════════════════════════════════════════╗ -->
 <!-- ║              MAIN APP                     ║ -->
 <!-- ╚═══════════════════════════════════════════╝ -->
@@ -1041,12 +1227,18 @@ body::before {
 
   <!-- ASCII Title -->
   <pre class="ascii-title">
- ██╗  ██╗ █████╗  ██████╗██╗  ██╗███████╗██████╗      █████╗  ██████╗ █████╗ ██████╗ ███████╗███╗   ███╗██╗   ██╗
- ██║  ██║██╔══██╗██╔════╝██║ ██╔╝██╔════╝██╔══██╗    ██╔══██╗██╔════╝██╔══██╗██╔══██╗██╔════╝████╗ ████║╚██╗ ██╔╝
- ███████║███████║██║     █████╔╝ █████╗  ██████╔╝    ███████║██║     ███████║██║  ██║█████╗  ██╔████╔██║ ╚████╔╝
- ██╔══██║██╔══██║██║     ██╔═██╗ ██╔══╝  ██╔══██╗    ██╔══██║██║     ██╔══██║██║  ██║██╔══╝  ██║╚██╔╝██║  ╚██╔╝
- ██║  ██║██║  ██║╚██████╗██║  ██╗███████╗██║  ██║    ██║  ██║╚██████╗██║  ██║██████╔╝███████╗██║ ╚═╝ ██║   ██║
- ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝    ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝     ╚═╝   ╚═╝</pre>
+ ██████╗ ██╗ ██████╗     ███╗   ███╗ █████╗  ██████╗███████╗
+ ██╔══██╗██║██╔════╝     ████╗ ████║██╔══██╗██╔════╝██╔════╝
+ ██████╔╝██║██║  ███╗    ██╔████╔██║███████║██║     ███████╗
+ ██╔══██╗██║██║   ██║    ██║╚██╔╝██║██╔══██║██║     ╚════██║
+ ██████╔╝██║╚██████╔╝    ██║ ╚═╝ ██║██║  ██║╚██████╗███████║
+ ╚═════╝ ╚═╝ ╚═════╝     ╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝╚══════╝
+              ██████╗████████╗███████╗
+             ██╔════╝╚══██╔══╝██╔════╝
+             ██║        ██║   █████╗
+             ██║        ██║   ██╔══╝
+             ╚██████╗   ██║   ██║
+              ╚═════╝   ╚═╝   ╚═╝</pre>
 
   <div class="intro-block">
     <span class="prompt">&gt; </span>Welcome to the CTF Training Ground. Your mission: find hidden <strong>FLAGS</strong>.<br>
@@ -1092,9 +1284,15 @@ body::before {
             On this page: Right-click anywhere &rarr; "View Page Source" (Chrome/Firefox)<br>
             Then press <kbd style="background:#222;padding:1px 5px;border:1px solid #444">Ctrl+F</kbd> (or Cmd+F on Mac) and search for <strong>FLAG</strong>
           </div>
-          <button class="hint-toggle" onclick="toggleHint(1)">&#9654; SHOW HINT</button>
-          <div class="hint-box" id="hint-1">
-            The flag is in an HTML comment near the very top of the file. Open View Page Source, hit Ctrl+F, and type FLAG to jump straight to it.
+          <div class="tips-section">
+            <span class="tips-label">&#9711; TIPS — SPEND COINS TO UNLOCK:</span>
+            <div class="tips-row">
+              <button class="tip-btn" id="tb-1-0" onclick="buyTip(1,0)">TIP 1 — 2 COINS</button>
+              <button class="tip-btn" id="tb-1-1" onclick="buyTip(1,1)">TIP 2 — 4 COINS</button>
+            </div>
+            <div class="tip-reveal" id="tr-1-0"></div>
+            <div class="tip-reveal" id="tr-1-1"></div>
+            <div class="tip-err" id="tip-err-1"></div>
           </div>
           <div class="flag-section">
             <span class="flag-label">&gt; ENTER FLAG:</span>
@@ -1141,9 +1339,17 @@ body::before {
             <div style="font-size:0.65rem;color:var(--dim);margin-top:4px">Drag the slider. When you find the right shift, you'll see readable text with FLAG{...}</div>
             <div class="cipher-output" id="caesar-output">IODJ{fdhvdu_lv_b0xu_iu1hqg}</div>
           </div>
-          <button class="hint-toggle" onclick="toggleHint(2)">&#9654; SHOW HINT</button>
-          <div class="hint-box" id="hint-2">
-            Caesar used a shift of 3 to encode. To decode, you need to shift back by the same amount. The slider goes from 0 to 25 — try dragging it and watch the message change. When you see FLAG{...} with real words, you've found it!
+          <div class="tips-section">
+            <span class="tips-label">&#9711; TIPS — SPEND COINS TO UNLOCK:</span>
+            <div class="tips-row">
+              <button class="tip-btn" id="tb-2-0" onclick="buyTip(2,0)">TIP 1 — 3 COINS</button>
+              <button class="tip-btn" id="tb-2-1" onclick="buyTip(2,1)">TIP 2 — 6 COINS</button>
+              <button class="tip-btn" id="tb-2-2" onclick="buyTip(2,2)">TIP 3 — 10 COINS</button>
+            </div>
+            <div class="tip-reveal" id="tr-2-0"></div>
+            <div class="tip-reveal" id="tr-2-1"></div>
+            <div class="tip-reveal" id="tr-2-2"></div>
+            <div class="tip-err" id="tip-err-2"></div>
           </div>
           <div class="flag-section">
             <span class="flag-label">&gt; ENTER DECODED FLAG:</span>
@@ -1189,9 +1395,15 @@ body::before {
             01000110 = F &nbsp;|&nbsp; 01001100 = L &nbsp;|&nbsp; 01000001 = A &nbsp;|&nbsp; 01000111 = G<br>
             You can search online for a "binary to text converter" to help you!
           </div>
-          <button class="hint-toggle" onclick="toggleHint(3)">&#9654; SHOW HINT</button>
-          <div class="hint-box" id="hint-3">
-            The first 4 groups decode to F, L, A, G — which means the message starts with FLAG! Convert the rest of the binary groups to find the full flag. Try a free binary-to-text tool online, or work it out group by group using an ASCII table.
+          <div class="tips-section">
+            <span class="tips-label">&#9711; TIPS — SPEND COINS TO UNLOCK:</span>
+            <div class="tips-row">
+              <button class="tip-btn" id="tb-3-0" onclick="buyTip(3,0)">TIP 1 — 3 COINS</button>
+              <button class="tip-btn" id="tb-3-1" onclick="buyTip(3,1)">TIP 2 — 7 COINS</button>
+            </div>
+            <div class="tip-reveal" id="tr-3-0"></div>
+            <div class="tip-reveal" id="tr-3-1"></div>
+            <div class="tip-err" id="tip-err-3"></div>
           </div>
           <div class="flag-section">
             <span class="flag-label">&gt; ENTER DECODED FLAG:</span>
@@ -1239,9 +1451,15 @@ body::before {
             </div>
             <div class="cipher-output" id="b64-output" style="margin-top:8px;color:#aaa;font-size:0.75rem">Decoded text will appear here...</div>
           </div>
-          <button class="hint-toggle" onclick="toggleHint(4)">&#9654; SHOW HINT</button>
-          <div class="hint-box" id="hint-4">
-            Paste the Base64 string into the decoder above. You can also search online for "Base64 decoder" and paste it there. The decoded result will contain the flag!
+          <div class="tips-section">
+            <span class="tips-label">&#9711; TIPS — SPEND COINS TO UNLOCK:</span>
+            <div class="tips-row">
+              <button class="tip-btn" id="tb-4-0" onclick="buyTip(4,0)">TIP 1 — 3 COINS</button>
+              <button class="tip-btn" id="tb-4-1" onclick="buyTip(4,1)">TIP 2 — 7 COINS</button>
+            </div>
+            <div class="tip-reveal" id="tr-4-0"></div>
+            <div class="tip-reveal" id="tr-4-1"></div>
+            <div class="tip-err" id="tip-err-4"></div>
           </div>
           <div class="flag-section">
             <span class="flag-label">&gt; ENTER DECODED FLAG:</span>
@@ -1287,9 +1505,15 @@ body::before {
           <div class="info-box">
             Try clicking inside the text box above and pressing <kbd style="background:#222;padding:1px 5px;border:1px solid #444">Ctrl+A</kbd> to select all text. Look for anything that appears when selected!
           </div>
-          <button class="hint-toggle" onclick="toggleHint(5)">&#9654; SHOW HINT</button>
-          <div class="hint-box" id="hint-5">
-            The hidden text is the same colour as the background — making it invisible until you select it. Select all the text in the box. Something will appear highlighted that was invisible before! Copy it carefully.
+          <div class="tips-section">
+            <span class="tips-label">&#9711; TIPS — SPEND COINS TO UNLOCK:</span>
+            <div class="tips-row">
+              <button class="tip-btn" id="tb-5-0" onclick="buyTip(5,0)">TIP 1 — 5 COINS</button>
+              <button class="tip-btn" id="tb-5-1" onclick="buyTip(5,1)">TIP 2 — 8 COINS</button>
+            </div>
+            <div class="tip-reveal" id="tr-5-0"></div>
+            <div class="tip-reveal" id="tr-5-1"></div>
+            <div class="tip-err" id="tip-err-5"></div>
           </div>
           <div class="flag-section">
             <span class="flag-label">&gt; ENTER HIDDEN FLAG:</span>
@@ -1340,9 +1564,15 @@ body::before {
             Right-click on the locked button above &rarr; "Inspect" or "Inspect Element"<br>
             Look at the HTML in the panel that appears. Find the attribute called <code>data-secret</code>
           </div>
-          <button class="hint-toggle" onclick="toggleHint(6)">&#9654; SHOW HINT</button>
-          <div class="hint-box" id="hint-6">
-            In the DevTools inspector, you'll see something like: <code style="color:var(--cyan)">data-secret="FLAG{...}"</code> right there in the button's HTML. The flag is the value inside the quotes!
+          <div class="tips-section">
+            <span class="tips-label">&#9711; TIPS — SPEND COINS TO UNLOCK:</span>
+            <div class="tips-row">
+              <button class="tip-btn" id="tb-6-0" onclick="buyTip(6,0)">TIP 1 — 5 COINS</button>
+              <button class="tip-btn" id="tb-6-1" onclick="buyTip(6,1)">TIP 2 — 8 COINS</button>
+            </div>
+            <div class="tip-reveal" id="tr-6-0"></div>
+            <div class="tip-reveal" id="tr-6-1"></div>
+            <div class="tip-err" id="tip-err-6"></div>
           </div>
           <div class="flag-section">
             <span class="flag-label">&gt; ENTER FLAG FROM data-secret:</span>
@@ -1390,9 +1620,15 @@ body::before {
             </div>
             <div class="cipher-output" id="hex-output" style="margin-top:8px;color:#aaa;font-size:0.75rem">Decoded text will appear here...</div>
           </div>
-          <button class="hint-toggle" onclick="toggleHint(7)">&#9654; SHOW HINT</button>
-          <div class="hint-box" id="hint-7">
-            Paste the hex string into the decoder above. Remember: every 2 characters = 1 letter. You can also search "hex to text decoder" online. The string starts with 46 4c 41 47 — can you guess what those spell?
+          <div class="tips-section">
+            <span class="tips-label">&#9711; TIPS — SPEND COINS TO UNLOCK:</span>
+            <div class="tips-row">
+              <button class="tip-btn" id="tb-7-0" onclick="buyTip(7,0)">TIP 1 — 5 COINS</button>
+              <button class="tip-btn" id="tb-7-1" onclick="buyTip(7,1)">TIP 2 — 10 COINS</button>
+            </div>
+            <div class="tip-reveal" id="tr-7-0"></div>
+            <div class="tip-reveal" id="tr-7-1"></div>
+            <div class="tip-err" id="tip-err-7"></div>
           </div>
           <div class="flag-section">
             <span class="flag-label">&gt; ENTER DECODED FLAG:</span>
@@ -1448,9 +1684,15 @@ body::before {
               <div id="robots-flag-prompt" style="color:#555;font-size:0.75rem">[Click the highlighted path above to fetch the secret file...]</div>
             </div>
           </div>
-          <button class="hint-toggle" onclick="toggleHint(8)">&#9654; SHOW HINT</button>
-          <div class="hint-box" id="hint-8">
-            Click on the <span style="color:var(--gold)">highlighted path</span> in the terminal simulation above. It simulates fetching the secret file that the robots.txt was hiding!
+          <div class="tips-section">
+            <span class="tips-label">&#9711; TIPS — SPEND COINS TO UNLOCK:</span>
+            <div class="tips-row">
+              <button class="tip-btn" id="tb-8-0" onclick="buyTip(8,0)">TIP 1 — 5 COINS</button>
+              <button class="tip-btn" id="tb-8-1" onclick="buyTip(8,1)">TIP 2 — 10 COINS</button>
+            </div>
+            <div class="tip-reveal" id="tr-8-0"></div>
+            <div class="tip-reveal" id="tr-8-1"></div>
+            <div class="tip-err" id="tip-err-8"></div>
           </div>
           <div class="flag-section">
             <span class="flag-label">&gt; ENTER FLAG FROM THE SECRET FILE:</span>
@@ -1519,12 +1761,17 @@ body::before {
             <div style="margin:8px 0;font-size:0.8rem;color:#aaccaa">Code accepted. Retrieving classified data...</div>
             <div class="vault-flag">FLAG{l0g1c_1s_y0ur_w3ap0n}</div>
           </div>
-          <button class="hint-toggle" onclick="toggleHint(9)">&#9654; SHOW HINT</button>
-          <div class="hint-box" id="hint-9">
-            Clue 1: Count the sides of a 6-sided shape.<br>
-            Clue 2: 65 &divide; 13 = ? (no remainder — it divides evenly)<br>
-            Clue 3: Binary 0011: the rightmost bit = 1 (ones), next = 1 (twos), so it's 2+1 = 3<br>
-            Clue 4: Simple subtraction!
+          <div class="tips-section">
+            <span class="tips-label">&#9711; TIPS — SPEND COINS TO UNLOCK:</span>
+            <div class="tips-row">
+              <button class="tip-btn" id="tb-9-0" onclick="buyTip(9,0)">TIP 1 — 5 COINS</button>
+              <button class="tip-btn" id="tb-9-1" onclick="buyTip(9,1)">TIP 2 — 10 COINS</button>
+              <button class="tip-btn" id="tb-9-2" onclick="buyTip(9,2)">TIP 3 — 15 COINS</button>
+            </div>
+            <div class="tip-reveal" id="tr-9-0"></div>
+            <div class="tip-reveal" id="tr-9-1"></div>
+            <div class="tip-reveal" id="tr-9-2"></div>
+            <div class="tip-err" id="tip-err-9"></div>
           </div>
           <div class="flag-section">
             <span class="flag-label">&gt; ENTER FLAG FROM THE VAULT:</span>
@@ -1579,10 +1826,17 @@ body::before {
               <div class="cipher-output" id="master-output" style="margin-top:8px;color:#aaa;font-size:0.75rem">Flag will appear here when you decode both steps...</div>
             </div>
           </div>
-          <button class="hint-toggle" onclick="toggleHint(10)">&#9654; SHOW HINT</button>
-          <div class="hint-box" id="hint-10">
-            Step 1: Use the Base64 decoder (built-in tool from Challenge 4, or online) on the code shown above. You'll get a text message with a hex string inside it.<br><br>
-            Step 2: Copy just the hex string from that message. Use the Hex decoder (built-in tool from Challenge 7, or online) to decode it. That gives you the flag!
+          <div class="tips-section">
+            <span class="tips-label">&#9711; TIPS — SPEND COINS TO UNLOCK:</span>
+            <div class="tips-row">
+              <button class="tip-btn" id="tb-10-0" onclick="buyTip(10,0)">TIP 1 — 8 COINS</button>
+              <button class="tip-btn" id="tb-10-1" onclick="buyTip(10,1)">TIP 2 — 12 COINS</button>
+              <button class="tip-btn" id="tb-10-2" onclick="buyTip(10,2)">TIP 3 — 18 COINS</button>
+            </div>
+            <div class="tip-reveal" id="tr-10-0"></div>
+            <div class="tip-reveal" id="tr-10-1"></div>
+            <div class="tip-reveal" id="tr-10-2"></div>
+            <div class="tip-err" id="tip-err-10"></div>
           </div>
           <div class="flag-section">
             <span class="flag-label">&gt; ENTER FINAL FLAG:</span>
@@ -1592,6 +1846,268 @@ body::before {
             </div>
             <div class="flag-feedback" id="feedback-10"></div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────
+         CH 11 — ROT13 REBEL
+    ────────────────────────────────────────── -->
+    <div class="challenge-card" id="card-11">
+      <div class="card-header" onclick="toggleCard(11)">
+        <div class="tier-badge tier-elite2">ELITE+</div>
+        <div class="card-title-block">
+          <div class="card-ch-num">CH.11</div>
+          <div class="card-title">ROT13 REBEL</div>
+          <div class="card-subtitle">No Built-in Tool — Find Your Own!</div>
+        </div>
+        <div class="card-coins">&#9711; 30</div>
+        <div class="card-status status-pending" id="status-11">LOCKED</div>
+        <div class="card-arrow" id="arrow-11">&#9658;</div>
+      </div>
+      <div class="card-body" id="body-11">
+        <div class="card-inner">
+          <div class="completed-banner" id="complete-11"><div class="big-text">&#9646; FLAG CAPTURED &#9646;</div><div class="coin-earned" id="earned-11">+30 COINS AWARDED</div></div>
+          <div class="ch-desc">ROT13 shifts every letter exactly 13 places in the alphabet — A→N, B→O, N→A, Z→M. Numbers and symbols stay unchanged. It's used everywhere on the internet.<br><br>You've learned how to decode things. Now go find your own decoder tool online and crack this:</div>
+          <div class="code-block">SYNT{e0g13_1f_sha}</div>
+          <div class="tips-section"><span class="tips-label">&#9711; TIPS — SPEND COINS TO UNLOCK:</span><div class="tips-row"><button class="tip-btn" id="tb-11-0" onclick="buyTip(11,0)">TIP 1 — 5 COINS</button><button class="tip-btn" id="tb-11-1" onclick="buyTip(11,1)">TIP 2 — 10 COINS</button><button class="tip-btn" id="tb-11-2" onclick="buyTip(11,2)">TIP 3 — 15 COINS</button></div><div class="tip-reveal" id="tr-11-0"></div><div class="tip-reveal" id="tr-11-1"></div><div class="tip-reveal" id="tr-11-2"></div><div class="tip-err" id="tip-err-11"></div></div>
+          <div class="flag-section"><span class="flag-label">&gt; ENTER DECODED FLAG:</span><div class="flag-row"><input type="text" class="flag-input" id="flag-11" placeholder="FLAG{...}" spellcheck="false" autocomplete="off"><button class="submit-btn" onclick="submitFlag(11,'FLAG{r0t13_1s_fun}',30)">&gt; SUBMIT</button></div><div class="flag-feedback" id="feedback-11"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────
+         CH 12 — URL UNMASKED
+    ────────────────────────────────────────── -->
+    <div class="challenge-card" id="card-12">
+      <div class="card-header" onclick="toggleCard(12)">
+        <div class="tier-badge tier-elite2">ELITE+</div>
+        <div class="card-title-block">
+          <div class="card-ch-num">CH.12</div>
+          <div class="card-title">URL UNMASKED</div>
+          <div class="card-subtitle">Decode the Web's Hidden Language</div>
+        </div>
+        <div class="card-coins">&#9711; 30</div>
+        <div class="card-status status-pending" id="status-12">LOCKED</div>
+        <div class="card-arrow" id="arrow-12">&#9658;</div>
+      </div>
+      <div class="card-body" id="body-12">
+        <div class="card-inner">
+          <div class="completed-banner" id="complete-12"><div class="big-text">&#9646; FLAG CAPTURED &#9646;</div><div class="coin-earned" id="earned-12">+30 COINS AWARDED</div></div>
+          <div class="ch-desc">URLs (web addresses) can't contain certain characters, so they get encoded with a % sign followed by two hex digits. For example: space = %20, { = %7B, } = %7D.<br><br>The content inside the flag has been URL-encoded. Decode the string below — the result goes inside <code style="color:var(--gold)">FLAG{...}</code>:</div>
+          <div class="code-block">%75%72%6C%5F%33%6E%63%30%64%69%6E%67%5F%75%6E%6C%6F%63%6B%65%64</div>
+          <div class="tips-section"><span class="tips-label">&#9711; TIPS — SPEND COINS TO UNLOCK:</span><div class="tips-row"><button class="tip-btn" id="tb-12-0" onclick="buyTip(12,0)">TIP 1 — 5 COINS</button><button class="tip-btn" id="tb-12-1" onclick="buyTip(12,1)">TIP 2 — 10 COINS</button></div><div class="tip-reveal" id="tr-12-0"></div><div class="tip-reveal" id="tr-12-1"></div><div class="tip-err" id="tip-err-12"></div></div>
+          <div class="flag-section"><span class="flag-label">&gt; ENTER FLAG (FLAG{decoded_text}):</span><div class="flag-row"><input type="text" class="flag-input" id="flag-12" placeholder="FLAG{...}" spellcheck="false" autocomplete="off"><button class="submit-btn" onclick="submitFlag(12,'FLAG{url_3nc0ding_unlocked}',30)">&gt; SUBMIT</button></div><div class="flag-feedback" id="feedback-12"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────
+         CH 13 — DOT DOT DASH
+    ────────────────────────────────────────── -->
+    <div class="challenge-card" id="card-13">
+      <div class="card-header" onclick="toggleCard(13)">
+        <div class="tier-badge tier-elite2">ELITE+</div>
+        <div class="card-title-block">
+          <div class="card-ch-num">CH.13</div>
+          <div class="card-title">DOT DOT DASH</div>
+          <div class="card-subtitle">Decode the Original Hacker Code</div>
+        </div>
+        <div class="card-coins">&#9711; 35</div>
+        <div class="card-status status-pending" id="status-13">LOCKED</div>
+        <div class="card-arrow" id="arrow-13">&#9658;</div>
+      </div>
+      <div class="card-body" id="body-13">
+        <div class="card-inner">
+          <div class="completed-banner" id="complete-13"><div class="big-text">&#9646; FLAG CAPTURED &#9646;</div><div class="coin-earned" id="earned-13">+35 COINS AWARDED</div></div>
+          <div class="ch-desc">Morse code was invented in the 1800s and was the first method of long-distance digital communication! Each letter is represented by dots (.) and dashes (-). A forward slash (/) separates words.<br><br>Decode the three words below, then form the flag as <code style="color:var(--gold)">FLAG{word1_word2_word3}</code> in lowercase:</div>
+          <div class="code-block">-- --- .-. ... . / .. ... / ..-. ..- -.</div>
+          <div class="tips-section"><span class="tips-label">&#9711; TIPS — SPEND COINS TO UNLOCK:</span><div class="tips-row"><button class="tip-btn" id="tb-13-0" onclick="buyTip(13,0)">TIP 1 — 5 COINS</button><button class="tip-btn" id="tb-13-1" onclick="buyTip(13,1)">TIP 2 — 10 COINS</button><button class="tip-btn" id="tb-13-2" onclick="buyTip(13,2)">TIP 3 — 15 COINS</button></div><div class="tip-reveal" id="tr-13-0"></div><div class="tip-reveal" id="tr-13-1"></div><div class="tip-reveal" id="tr-13-2"></div><div class="tip-err" id="tip-err-13"></div></div>
+          <div class="flag-section"><span class="flag-label">&gt; ENTER FLAG:</span><div class="flag-row"><input type="text" class="flag-input" id="flag-13" placeholder="FLAG{...}" spellcheck="false" autocomplete="off"><button class="submit-btn" onclick="submitFlag(13,'FLAG{morse_is_fun}',35)">&gt; SUBMIT</button></div><div class="flag-feedback" id="feedback-13"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────
+         CH 14 — VIGENERE VAULT
+    ────────────────────────────────────────── -->
+    <div class="challenge-card" id="card-14">
+      <div class="card-header" onclick="toggleCard(14)">
+        <div class="tier-badge tier-elite2">ELITE+</div>
+        <div class="card-title-block">
+          <div class="card-ch-num">CH.14</div>
+          <div class="card-title">VIGENERE VAULT</div>
+          <div class="card-subtitle">The Cipher That Stumped the World for 300 Years</div>
+        </div>
+        <div class="card-coins">&#9711; 40</div>
+        <div class="card-status status-pending" id="status-14">LOCKED</div>
+        <div class="card-arrow" id="arrow-14">&#9658;</div>
+      </div>
+      <div class="card-body" id="body-14">
+        <div class="card-inner">
+          <div class="completed-banner" id="complete-14"><div class="big-text">&#9646; FLAG CAPTURED &#9646;</div><div class="coin-earned" id="earned-14">+40 COINS AWARDED</div></div>
+          <div class="ch-desc">The Vigenère cipher uses a repeating <strong>keyword</strong> to shift each letter by a different amount — much harder to crack than Caesar! If the keyword is CTF, the first letter shifts by C(2), second by T(19), third by F(5), then it repeats.<br><br>Decode this ciphertext using the key <code style="color:var(--cyan)">CTF</code>. The decoded word is your flag content:</div>
+          <div class="code-block">Ciphertext: XBLKEFPVJ&nbsp;&nbsp;&nbsp;Key: CTF</div>
+          <div class="tips-section"><span class="tips-label">&#9711; TIPS — SPEND COINS TO UNLOCK:</span><div class="tips-row"><button class="tip-btn" id="tb-14-0" onclick="buyTip(14,0)">TIP 1 — 8 COINS</button><button class="tip-btn" id="tb-14-1" onclick="buyTip(14,1)">TIP 2 — 15 COINS</button><button class="tip-btn" id="tb-14-2" onclick="buyTip(14,2)">TIP 3 — 20 COINS</button></div><div class="tip-reveal" id="tr-14-0"></div><div class="tip-reveal" id="tr-14-1"></div><div class="tip-reveal" id="tr-14-2"></div><div class="tip-err" id="tip-err-14"></div></div>
+          <div class="flag-section"><span class="flag-label">&gt; ENTER FLAG (FLAG{decoded_word_lowercase}):</span><div class="flag-row"><input type="text" class="flag-input" id="flag-14" placeholder="FLAG{...}" spellcheck="false" autocomplete="off"><button class="submit-btn" onclick="submitFlag(14,'FLAG{vigilance}',40)">&gt; SUBMIT</button></div><div class="flag-feedback" id="feedback-14"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────
+         CH 15 — HASH HUNTER
+    ────────────────────────────────────────── -->
+    <div class="challenge-card" id="card-15">
+      <div class="card-header" onclick="toggleCard(15)">
+        <div class="tier-badge tier-elite2">ELITE+</div>
+        <div class="card-title-block">
+          <div class="card-ch-num">CH.15</div>
+          <div class="card-title">HASH HUNTER</div>
+          <div class="card-subtitle">Crack the Cryptographic Fingerprint</div>
+        </div>
+        <div class="card-coins">&#9711; 40</div>
+        <div class="card-status status-pending" id="status-15">LOCKED</div>
+        <div class="card-arrow" id="arrow-15">&#9658;</div>
+      </div>
+      <div class="card-body" id="body-15">
+        <div class="card-inner">
+          <div class="completed-banner" id="complete-15"><div class="big-text">&#9646; FLAG CAPTURED &#9646;</div><div class="coin-earned" id="earned-15">+40 COINS AWARDED</div></div>
+          <div class="ch-desc"><strong>Hashing</strong> is a one-way process that turns any data into a fixed-length fingerprint. The same input always gives the same hash. MD5 is one of the oldest hash functions — and it's broken!<br><br>Simple passwords have been hashed millions of times and stored in online databases. Crack this MD5 hash. The cracked word goes inside <code style="color:var(--gold)">FLAG{word_cracked}</code>:</div>
+          <div class="code-block">5f4dcc3b5aa765d61d8327deb882cf99</div>
+          <div class="info-box"><strong>WHY THIS MATTERS:</strong><br>This hash represents one of the most common passwords ever used. Finding it in a database shows why weak passwords are dangerous!</div>
+          <div class="tips-section"><span class="tips-label">&#9711; TIPS — SPEND COINS TO UNLOCK:</span><div class="tips-row"><button class="tip-btn" id="tb-15-0" onclick="buyTip(15,0)">TIP 1 — 8 COINS</button><button class="tip-btn" id="tb-15-1" onclick="buyTip(15,1)">TIP 2 — 15 COINS</button><button class="tip-btn" id="tb-15-2" onclick="buyTip(15,2)">TIP 3 — 20 COINS</button></div><div class="tip-reveal" id="tr-15-0"></div><div class="tip-reveal" id="tr-15-1"></div><div class="tip-reveal" id="tr-15-2"></div><div class="tip-err" id="tip-err-15"></div></div>
+          <div class="flag-section"><span class="flag-label">&gt; ENTER FLAG (FLAG{crackedword_cracked}):</span><div class="flag-row"><input type="text" class="flag-input" id="flag-15" placeholder="FLAG{...}" spellcheck="false" autocomplete="off"><button class="submit-btn" onclick="submitFlag(15,'FLAG{password_cracked}',40)">&gt; SUBMIT</button></div><div class="flag-feedback" id="feedback-15"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────
+         CH 16 — CONSOLE COWBOY
+    ────────────────────────────────────────── -->
+    <div class="challenge-card" id="card-16">
+      <div class="card-header" onclick="toggleCard(16)">
+        <div class="tier-badge tier-elite2">ELITE+</div>
+        <div class="card-title-block">
+          <div class="card-ch-num">CH.16</div>
+          <div class="card-title">CONSOLE COWBOY</div>
+          <div class="card-subtitle">Talk to the Browser Directly</div>
+        </div>
+        <div class="card-coins">&#9711; 45</div>
+        <div class="card-status status-pending" id="status-16">LOCKED</div>
+        <div class="card-arrow" id="arrow-16">&#9658;</div>
+      </div>
+      <div class="card-body" id="body-16">
+        <div class="card-inner">
+          <div class="completed-banner" id="complete-16"><div class="big-text">&#9646; FLAG CAPTURED &#9646;</div><div class="coin-earned" id="earned-16">+45 COINS AWARDED</div></div>
+          <div class="ch-desc">The browser's <strong>JavaScript Console</strong> lets you run code directly in the browser. Hackers use it to interact with page variables, test exploits, and find hidden data.<br><br>A secret key has been stored in a page variable called <code style="color:var(--cyan)">window._ctfConsoleKey</code>. Open the console and decode it.</div>
+          <div class="info-box"><strong>HOW TO OPEN THE CONSOLE:</strong><br>Press <kbd style="background:#222;padding:2px 6px;border:1px solid #444">F12</kbd> → click the <strong>Console</strong> tab<br>Type <code style="color:var(--cyan)">window._ctfConsoleKey</code> and press Enter to see the encoded value.<br>Then type <code style="color:var(--cyan)">atob(window._ctfConsoleKey)</code> to decode it.</div>
+          <div class="tips-section"><span class="tips-label">&#9711; TIPS — SPEND COINS TO UNLOCK:</span><div class="tips-row"><button class="tip-btn" id="tb-16-0" onclick="buyTip(16,0)">TIP 1 — 8 COINS</button><button class="tip-btn" id="tb-16-1" onclick="buyTip(16,1)">TIP 2 — 12 COINS</button><button class="tip-btn" id="tb-16-2" onclick="buyTip(16,2)">TIP 3 — 18 COINS</button></div><div class="tip-reveal" id="tr-16-0"></div><div class="tip-reveal" id="tr-16-1"></div><div class="tip-reveal" id="tr-16-2"></div><div class="tip-err" id="tip-err-16"></div></div>
+          <div class="flag-section"><span class="flag-label">&gt; ENTER FLAG FROM CONSOLE:</span><div class="flag-row"><input type="text" class="flag-input" id="flag-16" placeholder="FLAG{...}" spellcheck="false" autocomplete="off"><button class="submit-btn" onclick="submitFlag(16,'FLAG{c0ns0le_cowb0y}',45)">&gt; SUBMIT</button></div><div class="flag-feedback" id="feedback-16"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────
+         CH 17 — COOKIE MONSTER
+    ────────────────────────────────────────── -->
+    <div class="challenge-card" id="card-17">
+      <div class="card-header" onclick="toggleCard(17)">
+        <div class="tier-badge tier-elite2">ELITE+</div>
+        <div class="card-title-block">
+          <div class="card-ch-num">CH.17</div>
+          <div class="card-title">COOKIE MONSTER</div>
+          <div class="card-subtitle">Hunt Down the Hidden Cookie</div>
+        </div>
+        <div class="card-coins">&#9711; 45</div>
+        <div class="card-status status-pending" id="status-17">LOCKED</div>
+        <div class="card-arrow" id="arrow-17">&#9658;</div>
+      </div>
+      <div class="card-body" id="body-17">
+        <div class="card-inner">
+          <div class="completed-banner" id="complete-17"><div class="big-text">&#9646; FLAG CAPTURED &#9646;</div><div class="coin-earned" id="earned-17">+45 COINS AWARDED</div></div>
+          <div class="ch-desc">Browser <strong>cookies</strong> are small pieces of data websites store on your computer. They're used for login sessions, preferences, and tracking. But they're also a target for hackers!<br><br>A secret flag has been stored as a cookie on this page. Use DevTools to find it.</div>
+          <div class="info-box"><strong>HOW TO FIND COOKIES:</strong><br>Press <kbd style="background:#222;padding:2px 6px;border:1px solid #444">F12</kbd> → click <strong>Application</strong> tab (Chrome) or <strong>Storage</strong> tab (Firefox)<br>Expand <strong>Cookies</strong> → click the current site URL → look for a cookie named <code style="color:var(--cyan)">ctf_ch17_secret</code></div>
+          <div class="tips-section"><span class="tips-label">&#9711; TIPS — SPEND COINS TO UNLOCK:</span><div class="tips-row"><button class="tip-btn" id="tb-17-0" onclick="buyTip(17,0)">TIP 1 — 8 COINS</button><button class="tip-btn" id="tb-17-1" onclick="buyTip(17,1)">TIP 2 — 12 COINS</button><button class="tip-btn" id="tb-17-2" onclick="buyTip(17,2)">TIP 3 — 18 COINS</button></div><div class="tip-reveal" id="tr-17-0"></div><div class="tip-reveal" id="tr-17-1"></div><div class="tip-reveal" id="tr-17-2"></div><div class="tip-err" id="tip-err-17"></div></div>
+          <div class="flag-section"><span class="flag-label">&gt; ENTER FLAG FROM COOKIE:</span><div class="flag-row"><input type="text" class="flag-input" id="flag-17" placeholder="FLAG{...}" spellcheck="false" autocomplete="off"><button class="submit-btn" onclick="submitFlag(17,'FLAG{c00k13_m0nster}',45)">&gt; SUBMIT</button></div><div class="flag-feedback" id="feedback-17"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────
+         CH 18 — XOR WARS
+    ────────────────────────────────────────── -->
+    <div class="challenge-card" id="card-18">
+      <div class="card-header" onclick="toggleCard(18)">
+        <div class="tier-badge tier-elite2">ELITE+</div>
+        <div class="card-title-block">
+          <div class="card-ch-num">CH.18</div>
+          <div class="card-title">XOR WARS</div>
+          <div class="card-subtitle">The Cipher at the Heart of All Encryption</div>
+        </div>
+        <div class="card-coins">&#9711; 50</div>
+        <div class="card-status status-pending" id="status-18">LOCKED</div>
+        <div class="card-arrow" id="arrow-18">&#9658;</div>
+      </div>
+      <div class="card-body" id="body-18">
+        <div class="card-inner">
+          <div class="completed-banner" id="complete-18"><div class="big-text">&#9646; FLAG CAPTURED &#9646;</div><div class="coin-earned" id="earned-18">+50 COINS AWARDED</div></div>
+          <div class="ch-desc"><strong>XOR</strong> (exclusive OR) is a bitwise operation that is its own inverse — XOR something with a key, then XOR it again with the same key and you get the original back. It's used in nearly every encryption algorithm!<br><br>The word <strong>CYBER</strong> was XOR'd with the key <strong>10</strong> (decimal). The result in hex is shown below. XOR each byte with 10 to recover the original:</div>
+          <div class="code-block">Encoded hex: 49 53 48 4F 58&nbsp;&nbsp;&nbsp;XOR key: 10</div>
+          <div class="info-box"><strong>HOW TO DECODE:</strong><br>Search for "XOR decoder online" or use <strong>CyberChef</strong> (free tool). Select "XOR" operation, enter key 10 (decimal), paste the hex. Or decode manually: 0x49 XOR 0x0A = ?</div>
+          <div class="tips-section"><span class="tips-label">&#9711; TIPS — SPEND COINS TO UNLOCK:</span><div class="tips-row"><button class="tip-btn" id="tb-18-0" onclick="buyTip(18,0)">TIP 1 — 8 COINS</button><button class="tip-btn" id="tb-18-1" onclick="buyTip(18,1)">TIP 2 — 15 COINS</button><button class="tip-btn" id="tb-18-2" onclick="buyTip(18,2)">TIP 3 — 20 COINS</button></div><div class="tip-reveal" id="tr-18-0"></div><div class="tip-reveal" id="tr-18-1"></div><div class="tip-reveal" id="tr-18-2"></div><div class="tip-err" id="tip-err-18"></div></div>
+          <div class="flag-section"><span class="flag-label">&gt; ENTER FLAG (FLAG{word_xored}):</span><div class="flag-row"><input type="text" class="flag-input" id="flag-18" placeholder="FLAG{...}" spellcheck="false" autocomplete="off"><button class="submit-btn" onclick="submitFlag(18,'FLAG{cyber_xored}',50)">&gt; SUBMIT</button></div><div class="flag-feedback" id="feedback-18"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────
+         CH 19 — OCTAL ODYSSEY
+    ────────────────────────────────────────── -->
+    <div class="challenge-card" id="card-19">
+      <div class="card-header" onclick="toggleCard(19)">
+        <div class="tier-badge tier-elite2">ELITE+</div>
+        <div class="card-title-block">
+          <div class="card-ch-num">CH.19</div>
+          <div class="card-title">OCTAL ODYSSEY</div>
+          <div class="card-subtitle">Base 8 — The Forgotten Number System</div>
+        </div>
+        <div class="card-coins">&#9711; 55</div>
+        <div class="card-status status-pending" id="status-19">LOCKED</div>
+        <div class="card-arrow" id="arrow-19">&#9658;</div>
+      </div>
+      <div class="card-body" id="body-19">
+        <div class="card-inner">
+          <div class="completed-banner" id="complete-19"><div class="big-text">&#9646; FLAG CAPTURED &#9646;</div><div class="coin-earned" id="earned-19">+55 COINS AWARDED</div></div>
+          <div class="ch-desc">You know binary (base 2) and hex (base 16). Now meet <strong>octal</strong> — base 8, using only digits 0–7. Programmers use it for Unix file permissions and some older systems.<br><br>Each number below is the ASCII value of one character, written in octal. Convert them all to find the flag:</div>
+          <div class="code-block">106 114 101 107 173 60 143 164 64 154 137 145 170 160 154 60 162 63 162 175</div>
+          <div class="tips-section"><span class="tips-label">&#9711; TIPS — SPEND COINS TO UNLOCK:</span><div class="tips-row"><button class="tip-btn" id="tb-19-0" onclick="buyTip(19,0)">TIP 1 — 8 COINS</button><button class="tip-btn" id="tb-19-1" onclick="buyTip(19,1)">TIP 2 — 15 COINS</button><button class="tip-btn" id="tb-19-2" onclick="buyTip(19,2)">TIP 3 — 20 COINS</button></div><div class="tip-reveal" id="tr-19-0"></div><div class="tip-reveal" id="tr-19-1"></div><div class="tip-reveal" id="tr-19-2"></div><div class="tip-err" id="tip-err-19"></div></div>
+          <div class="flag-section"><span class="flag-label">&gt; ENTER DECODED FLAG:</span><div class="flag-row"><input type="text" class="flag-input" id="flag-19" placeholder="FLAG{...}" spellcheck="false" autocomplete="off"><button class="submit-btn" onclick="submitFlag(19,'FLAG{0ct4l_expl0r3r}',55)">&gt; SUBMIT</button></div><div class="flag-feedback" id="feedback-19"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────────────────────────────
+         CH 20 — THE GAUNTLET
+    ────────────────────────────────────────── -->
+    <div class="challenge-card" id="card-20">
+      <div class="card-header" onclick="toggleCard(20)">
+        <div class="tier-badge tier-elite2">ELITE+</div>
+        <div class="card-title-block">
+          <div class="card-ch-num">CH.20</div>
+          <div class="card-title">THE GAUNTLET</div>
+          <div class="card-subtitle">Triple-Layer Encoding — The Final Boss</div>
+        </div>
+        <div class="card-coins">&#9711; 75</div>
+        <div class="card-status status-pending" id="status-20">LOCKED</div>
+        <div class="card-arrow" id="arrow-20">&#9658;</div>
+      </div>
+      <div class="card-body" id="body-20">
+        <div class="card-inner">
+          <div class="completed-banner" id="complete-20"><div class="big-text">&#9646; ALL 20 FLAGS CAPTURED &#9646;</div><div class="coin-earned" id="earned-20">+75 COINS | CYBER LEGEND UNLOCKED</div></div>
+          <div class="ch-desc">The ultimate challenge. The flag has been encoded in <strong>three layers</strong> — you must work backwards through each one:<br><br><strong>Layer 1 (outermost):</strong> Base64<br><strong>Layer 2 (middle):</strong> ROT13<br><strong>Layer 3 (innermost):</strong> Hex<br><br>Start by Base64 decoding the string below. Then ROT13 the result. Then hex decode that to reveal the flag. Use online tools for each step!</div>
+          <div class="code-block" id="ch20-encoded">loading...</div>
+          <div class="tips-section"><span class="tips-label">&#9711; TIPS — SPEND COINS TO UNLOCK:</span><div class="tips-row"><button class="tip-btn" id="tb-20-0" onclick="buyTip(20,0)">TIP 1 — 10 COINS</button><button class="tip-btn" id="tb-20-1" onclick="buyTip(20,1)">TIP 2 — 20 COINS</button><button class="tip-btn" id="tb-20-2" onclick="buyTip(20,2)">TIP 3 — 30 COINS</button></div><div class="tip-reveal" id="tr-20-0"></div><div class="tip-reveal" id="tr-20-1"></div><div class="tip-reveal" id="tr-20-2"></div><div class="tip-err" id="tip-err-20"></div></div>
+          <div class="flag-section"><span class="flag-label">&gt; ENTER FINAL FLAG:</span><div class="flag-row"><input type="text" class="flag-input" id="flag-20" placeholder="FLAG{...}" spellcheck="false" autocomplete="off"><button class="submit-btn" onclick="submitFlag(20,'FLAG{g4untl3t_surv1v0r}',75)">&gt; SUBMIT</button></div><div class="flag-feedback" id="feedback-20"></div></div>
         </div>
       </div>
     </div>
@@ -1626,10 +2142,39 @@ body::before {
         <span class="badge-icon">[*]</span>
         THE LEGEND
       </div>
+      <div class="badge" id="badge-decoder">
+        <span class="badge-icon">[D]</span>
+        DECODER
+      </div>
+      <div class="badge" id="badge-console-god">
+        <span class="badge-icon">[&gt;]</span>
+        CONSOLE GOD
+      </div>
+      <div class="badge" id="badge-gauntlet">
+        <span class="badge-icon">[G]</span>
+        GAUNTLET
+      </div>
     </div>
   </div>
 
 </div><!-- end #app -->
+
+<!-- SCOREBOARD VIEW -->
+<div id="scoreboard-view">
+  <div class="sb-title">&gt; SCOREBOARD_</div>
+  <div class="sb-sub">RANKED BY FLAGS CAPTURED → COINS EARNED → SPEED</div>
+  <button class="sb-refresh" onclick="renderScoreboard()">&gt; REFRESH</button>
+  <table class="sb-table">
+    <thead>
+      <tr>
+        <th>RANK</th><th>AVATAR</th><th>HACKER</th><th>FLAGS</th><th>COINS</th><th>TIME</th><th>DATE</th>
+      </tr>
+    </thead>
+    <tbody id="sb-body">
+      <tr><td colspan="7" class="sb-empty">NO SCORES YET — COMPLETE A CHALLENGE TO APPEAR HERE!</td></tr>
+    </tbody>
+  </table>
+</div>
 
 <!-- PROGRESS BAR -->
 <div id="progress-bar">
@@ -1637,7 +2182,7 @@ body::before {
   <div class="progress-track">
     <div class="progress-fill" id="progress-fill"></div>
   </div>
-  <span class="progress-count" id="progress-count">0 / 10</span>
+  <span class="progress-count" id="progress-count">0 / 20</span>
 </div>
 
 <!-- ═════════════════════════════════════════════
@@ -1655,6 +2200,64 @@ const S = {
 };
 
 // ─────────────────────────────────────────────
+// TIPS DATA
+// ─────────────────────────────────────────────
+const TIPS_DATA = {
+  1:  [{cost:2,  text:"Right-click anywhere on the page and choose 'View Page Source'."},
+       {cost:4,  text:"In the source, press Ctrl+F (Cmd+F on Mac) and type FLAG to jump straight to it."}],
+  2:  [{cost:3,  text:"The Caesar cipher shifts every letter by the same fixed number."},
+       {cost:6,  text:"Try shift = 3 on the decoder slider above — Caesar always used 3."},
+       {cost:10, text:"The decoded flag starts with FLAG{caesar_is... — drag the slider until you see real words!"}],
+  3:  [{cost:3,  text:"Each group of 8 binary digits (bits) is one character."},
+       {cost:7,  text:"Search 'binary to text converter' online and paste all the binary groups in."}],
+  4:  [{cost:3,  text:"Base64 uses letters A-Z, a-z, 0-9, + and /, and often ends with = signs."},
+       {cost:7,  text:"Search 'Base64 decoder' online or paste into the built-in decoder above."}],
+  5:  [{cost:5,  text:"Click inside the text box and press Ctrl+A (Cmd+A on Mac) to select ALL text."},
+       {cost:8,  text:"The hidden text is the same colour as the background — invisible until selected! Highlight it carefully."}],
+  6:  [{cost:5,  text:"Right-click directly on the locked button and choose 'Inspect' or 'Inspect Element'."},
+       {cost:8,  text:"In the HTML panel look for an attribute called data-secret on the button element. The value is the flag!"}],
+  7:  [{cost:5,  text:"Every 2 hex characters = 1 byte = 1 character. 46=F, 4C=L, 41=A, 47=G..."},
+       {cost:10, text:"Search 'hex to text decoder' online and paste the full hex string."}],
+  8:  [{cost:5,  text:"Click the highlighted yellow path text in the terminal simulation above."},
+       {cost:10, text:"The robots.txt reveals a secret path. Clicking it simulates fetching that hidden file and displays the flag."}],
+  9:  [{cost:5,  text:"Clue 1: hexagon=6. Clue 2: 65÷13=5. Clue 3: binary 0011=3. Clue 4: 8−2=6."},
+       {cost:10, text:"Enter 6, 5, 3, 6 into the four input boxes. The vault will open automatically!"},
+       {cost:15, text:"After the vault opens, the flag appears on screen. Copy it exactly and paste it below."}],
+  10: [{cost:8,  text:"Step 1: Base64 decode the string shown above. Use an online tool or the CH04 decoder."},
+       {cost:12, text:"Step 2: The decoded text contains a hex string. Hex decode THAT string to get the flag."},
+       {cost:18, text:"The Base64 decodes to a sentence containing a hex string. Decode the hex to get FLAG{...}"}],
+  11: [{cost:5,  text:"ROT13 shifts every letter exactly 13 places: A→N, B→O, N→A, Z→M. Numbers stay the same."},
+       {cost:10, text:"Search 'ROT13 decoder' online and paste: SYNT{e0g13_1f_sha}"},
+       {cost:15, text:"SYNT decodes to FLAG. The rest: e0g13 → r0t13, 1f → is, sha → fun."}],
+  12: [{cost:5,  text:"Each %XX is a URL-encoded character. %75=u, %72=r, %6C=l, %5F=_ ..."},
+       {cost:10, text:"Search 'URL decoder' or 'percent decode' online. Paste the entire encoded string to get the flag content."}],
+  13: [{cost:5,  text:"In Morse: dots and dashes. Each symbol group = one letter. / = space between words."},
+       {cost:10, text:"Search 'Morse code decoder' online. There are three words — join them with underscores."},
+       {cost:15, text:"The three decoded words literally describe the subject of this challenge!"}],
+  14: [{cost:8,  text:"Vigenère uses a repeating keyword to shift each letter by a different amount. Key: CTF."},
+       {cost:15, text:"Search 'Vigenere decoder online', enter ciphertext XBLKEFPVJ and key CTF."},
+       {cost:20, text:"The decoded word means constant watchfulness — a key quality for any hacker!"}],
+  15: [{cost:8,  text:"MD5 is a one-way hash, but simple passwords are already cracked and stored in online databases!"},
+       {cost:15, text:"Try crackstation.net — paste the hash and it will reveal the original password immediately."},
+       {cost:20, text:"This is one of the top 10 most commonly used (and cracked) passwords in the world. Very famous!"}],
+  16: [{cost:8,  text:"Open DevTools with F12. Click the 'Console' tab to run JavaScript directly in the browser."},
+       {cost:12, text:"Type: window._ctfConsoleKey in the console and press Enter to see the encoded value."},
+       {cost:18, text:"atob() is a JavaScript function that decodes Base64. Try: atob(window._ctfConsoleKey)"}],
+  17: [{cost:8,  text:"Websites store data in cookies. Open DevTools (F12) and find the Application tab."},
+       {cost:12, text:"DevTools → Application tab → Cookies → click the current site URL. Look for ctf_ch17_secret."},
+       {cost:18, text:"The cookie named ctf_ch17_secret has the flag as its value! Copy the Value column exactly."}],
+  18: [{cost:8,  text:"XOR is its own inverse — XOR the encoded data with the same key to get the original back."},
+       {cost:15, text:"Search 'XOR decoder online' or use CyberChef. Input the hex bytes and XOR key = 10 (decimal)."},
+       {cost:20, text:"First byte: 0x49 XOR 0x0A = 0x43 = 'C'. Decode all 5 bytes the same way!"}],
+  19: [{cost:8,  text:"Octal is base-8 — digits only go 0–7. Each number represents one ASCII character value."},
+       {cost:15, text:"Search 'octal to text converter' online and paste the sequence of numbers."},
+       {cost:20, text:"The first four numbers (106 114 101 107) decode to F, L, A, G — so it starts with FLAG!"}],
+  20: [{cost:10, text:"Three encoding layers. Work backwards: first Base64 decode, then ROT13 the result, then hex decode."},
+       {cost:20, text:"Step 1: Base64 decode (online tool). Step 2: ROT13 the result (online tool). Step 3: Hex decode."},
+       {cost:30, text:"Use online tools for each step. The final hex decode gives FLAG{...} — you've beaten the gauntlet!"}],
+};
+
+// ─────────────────────────────────────────────
 // STATE
 // ─────────────────────────────────────────────
 let profile = {
@@ -1664,16 +2267,23 @@ let profile = {
 };
 let coins = S.get('ctf_coins', 0);
 let completed = new Set(S.get('ctf_completed', []));
-let hintsUsed = new Set(S.get('ctf_hints_used', []));
+let tipsOwned = new Set(S.get('ctf_tips_owned', []));
+let challengeStartTimes = {};
+let challengeTimes = S.get('ctf_times', {});
 
+const TOTAL = 20;
 const AVATARS = ['[X]', '[*]', '[#]', '[@]', '[^]', '[~]'];
 const RANKS = [
-  { min: 0,   max: 20,  label: 'SCRIPT KIDDIE' },
-  { min: 21,  max: 60,  label: 'JUNIOR HACKER' },
-  { min: 61,  max: 120, label: 'HACKER' },
-  { min: 121, max: 200, label: 'ELITE HACKER' },
-  { min: 201, max: 999, label: 'CYBER LEGEND ★' },
+  { min: 0,   label: 'SCRIPT KIDDIE' },
+  { min: 30,  label: 'JUNIOR HACKER' },
+  { min: 100, label: 'HACKER' },
+  { min: 250, label: 'ELITE HACKER' },
+  { min: 500, label: 'GHOST IN THE MACHINE' },
+  { min: 900, label: 'CYBER LEGEND ★' },
 ];
+
+// Set console key for CH16
+window._ctfConsoleKey = btoa('FLAG{c0ns0le_cowb0y}');
 
 // ─────────────────────────────────────────────
 // BOOT SEQUENCE
@@ -1736,8 +2346,19 @@ function updateColorSelection(color) {
   applyAccent(color);
 }
 
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1,3), 16);
+  const g = parseInt(hex.slice(3,5), 16);
+  const b = parseInt(hex.slice(5,7), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
 function applyAccent(color) {
-  document.documentElement.style.setProperty('--accent', color);
+  const root = document.documentElement.style;
+  root.setProperty('--accent', color);
+  root.setProperty('--green', color);
+  root.setProperty('--border', hexToRgba(color, 0.18));
+  root.setProperty('--dim', hexToRgba(color, 0.5));
 }
 
 document.querySelectorAll('.avatar-btn').forEach(btn => {
@@ -1763,7 +2384,7 @@ document.getElementById('save-profile-btn').addEventListener('click', () => {
 
 document.getElementById('reset-btn').addEventListener('click', () => {
   if (!confirm('RESET ALL PROGRESS? This cannot be undone!')) return;
-  ['ctf_nickname','ctf_avatar','ctf_color','ctf_coins','ctf_completed','ctf_hints_used']
+  ['ctf_nickname','ctf_avatar','ctf_color','ctf_coins','ctf_completed','ctf_tips_owned','ctf_times']
     .forEach(k => localStorage.removeItem(k));
   location.reload();
 });
@@ -1778,10 +2399,26 @@ document.getElementById('modal-backdrop').addEventListener('click', e => {
 });
 
 // ─────────────────────────────────────────────
+// TAB SWITCHING
+// ─────────────────────────────────────────────
+function switchTab(tab) {
+  const app = document.getElementById('app');
+  const sb  = document.getElementById('scoreboard-view');
+  if (tab === 'challenges') {
+    app.classList.add('show'); sb.classList.remove('show');
+  } else {
+    app.classList.remove('show'); sb.classList.add('show');
+    renderScoreboard();
+  }
+  document.getElementById('tab-challenges').classList.toggle('active', tab === 'challenges');
+  document.getElementById('tab-scoreboard').classList.toggle('active', tab === 'scoreboard');
+}
+
+// ─────────────────────────────────────────────
 // HUD RENDER
 // ─────────────────────────────────────────────
 function getRank(c) {
-  return RANKS.find(r => c >= r.min && c <= r.max)?.label || 'SCRIPT KIDDIE';
+  return [...RANKS].reverse().find(r => c >= r.min)?.label || 'SCRIPT KIDDIE';
 }
 
 function renderHUD() {
@@ -1808,22 +2445,52 @@ function toggleCard(id) {
     openCards.add(id);
     body.classList.add('open');
     arrow.classList.add('open');
+    // Start timer when card opens for the first time (if not completed)
+    if (!completed.has(id) && !challengeStartTimes[id]) {
+      challengeStartTimes[id] = Date.now();
+    }
   }
 }
 
 // ─────────────────────────────────────────────
-// HINT SYSTEM
+// TIPS SYSTEM
 // ─────────────────────────────────────────────
-function toggleHint(id) {
-  const box = document.getElementById(`hint-${id}`);
-  const btn = box.previousElementSibling;
-  const isShowing = box.classList.toggle('show');
-  btn.textContent = isShowing ? '&#9660; HIDE HINT' : '&#9654; SHOW HINT';
-  btn.innerHTML = isShowing ? '&#9660; HIDE HINT' : '&#9654; SHOW HINT';
-  if (isShowing) {
-    hintsUsed.add(id);
-    S.set('ctf_hints_used', [...hintsUsed]);
+function buyTip(chId, tipIdx) {
+  const tipData = TIPS_DATA[chId]?.[tipIdx];
+  if (!tipData) return;
+  const key = `${chId}-${tipIdx}`;
+  const errEl = document.getElementById(`tip-err-${chId}`);
+  if (tipsOwned.has(key)) return;
+  if (coins < tipData.cost) {
+    if (errEl) {
+      errEl.textContent = `>> INSUFFICIENT COINS — need ${tipData.cost} coins for this tip!`;
+      setTimeout(() => { if (errEl) errEl.textContent = ''; }, 3000);
+    }
+    return;
   }
+  coins -= tipData.cost;
+  tipsOwned.add(key);
+  S.set('ctf_tips_owned', [...tipsOwned]);
+  S.set('ctf_coins', coins);
+  const revEl = document.getElementById(`tr-${chId}-${tipIdx}`);
+  const btnEl = document.getElementById(`tb-${chId}-${tipIdx}`);
+  if (revEl) { revEl.textContent = tipData.text; revEl.style.display = 'block'; }
+  if (btnEl) { btnEl.classList.add('purchased'); btnEl.textContent = `\u2713 TIP ${tipIdx+1} UNLOCKED`; }
+  renderHUD();
+}
+
+function restoreTips() {
+  tipsOwned.forEach(key => {
+    const parts = key.split('-');
+    const chId = parseInt(parts[0]);
+    const tipIdx = parseInt(parts[1]);
+    const tipData = TIPS_DATA[chId]?.[tipIdx];
+    if (!tipData) return;
+    const revEl = document.getElementById(`tr-${chId}-${tipIdx}`);
+    const btnEl = document.getElementById(`tb-${chId}-${tipIdx}`);
+    if (revEl) { revEl.textContent = tipData.text; revEl.style.display = 'block'; }
+    if (btnEl) { btnEl.classList.add('purchased'); btnEl.textContent = `\u2713 TIP ${tipIdx+1} UNLOCKED`; }
+  });
 }
 
 // ─────────────────────────────────────────────
@@ -1831,18 +2498,29 @@ function toggleHint(id) {
 // ─────────────────────────────────────────────
 function submitFlag(id, correctFlag, coinValue) {
   if (completed.has(id)) return;
-  const input = document.getElementById(`flag-${id}`);
+  const input    = document.getElementById(`flag-${id}`);
   const feedback = document.getElementById(`feedback-${id}`);
   const submitted = input.value.trim();
 
   if (submitted === correctFlag) {
-    // SUCCESS
+    // Compute speed bonus
+    const timeMs = challengeStartTimes[id] ? (Date.now() - challengeStartTimes[id]) : null;
+    const secs = timeMs ? timeMs / 1000 : Infinity;
+    let bonus = 0, speedMsg = '';
+    if (secs < 60)       { bonus = Math.round(coinValue * 0.75); speedMsg = `>> SPEED BONUS: UNDER 1 MIN! +${bonus} EXTRA COINS`; }
+    else if (secs < 120) { bonus = Math.round(coinValue * 0.50); speedMsg = `>> SPEED BONUS: UNDER 2 MIN! +${bonus} EXTRA COINS`; }
+    else if (secs < 300) { bonus = Math.round(coinValue * 0.25); speedMsg = `>> SPEED BONUS: UNDER 5 MIN! +${bonus} EXTRA COINS`; }
+    else if (secs < 600) { bonus = Math.round(coinValue * 0.10); speedMsg = `>> SPEED BONUS: UNDER 10 MIN! +${bonus} EXTRA COINS`; }
+    const total = coinValue + bonus;
+
     completed.add(id);
-    coins += coinValue;
+    coins += total;
+    if (timeMs) { challengeTimes[id] = timeMs; S.set('ctf_times', challengeTimes); }
     S.set('ctf_completed', [...completed]);
     S.set('ctf_coins', coins);
 
-    feedback.textContent = `>> FLAG ACCEPTED! +${coinValue} COINS AWARDED`;
+    feedback.innerHTML = `>> FLAG ACCEPTED! +${coinValue} COINS AWARDED` +
+      (bonus ? `<div class="speed-bonus-msg">${speedMsg}</div>` : '');
     feedback.className = 'flag-feedback feedback-ok';
     input.disabled = true;
     input.nextElementSibling.disabled = true;
@@ -1850,27 +2528,20 @@ function submitFlag(id, correctFlag, coinValue) {
     document.getElementById(`complete-${id}`).classList.add('show');
     document.getElementById(`status-${id}`).textContent = 'COMPLETE';
     document.getElementById(`status-${id}`).className = 'card-status status-done';
-    document.getElementById(`card-${id}`).classList.add('completed');
-
-    // Flash animation
-    document.getElementById(`card-${id}`).classList.add('flash-success');
+    document.getElementById(`card-${id}`).classList.add('completed', 'flash-success');
     setTimeout(() => document.getElementById(`card-${id}`).classList.remove('flash-success'), 600);
 
-    // Coin animation
-    animateCoins(coinValue);
+    animateCoins(total);
     spawnCoinParticles();
-
-    // Update HUD
     renderHUD();
     updateProgress();
     checkBadges();
+    saveScoreboard();
 
-    // Check if all done
-    if (completed.size === 10) {
+    if (completed.size === TOTAL) {
       setTimeout(() => document.getElementById('celebrate').classList.add('show'), 1200);
     }
   } else {
-    // FAIL
     feedback.textContent = '>> ACCESS DENIED. Wrong flag. Try again.';
     feedback.className = 'flag-feedback feedback-err';
     document.getElementById(`card-${id}`).classList.add('shake');
@@ -1918,9 +2589,9 @@ function spawnCoinParticles() {
 // PROGRESS BAR
 // ─────────────────────────────────────────────
 function updateProgress() {
-  const pct = (completed.size / 10) * 100;
+  const pct = (completed.size / TOTAL) * 100;
   document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('progress-count').textContent = `${completed.size} / 10`;
+  document.getElementById('progress-count').textContent = `${completed.size} / ${TOTAL}`;
 }
 
 // ─────────────────────────────────────────────
@@ -1932,7 +2603,10 @@ function checkBadges() {
   if (completed.has(6)) earn('badge-inspector');
   if (completed.has(8)) earn('badge-bot-whisperer');
   if (completed.has(9)) earn('badge-logic-master');
-  if (completed.size === 10) earn('badge-legend');
+  if ([11,12,13,14,15].filter(n => completed.has(n)).length >= 3) earn('badge-decoder');
+  if (completed.has(16)) earn('badge-console-god');
+  if (completed.has(20)) earn('badge-gauntlet');
+  if (completed.size === TOTAL) earn('badge-legend');
 }
 
 function earn(id) {
@@ -1940,30 +2614,90 @@ function earn(id) {
 }
 
 // ─────────────────────────────────────────────
+// SCOREBOARD
+// ─────────────────────────────────────────────
+function formatTime(ms) {
+  if (!ms || ms <= 0) return '--';
+  const s = Math.floor(ms / 1000);
+  const m = Math.floor(s / 60);
+  const h = Math.floor(m / 60);
+  if (h > 0) return `${h}h ${m % 60}m`;
+  if (m > 0) return `${m}m ${s % 60}s`;
+  return `${s}s`;
+}
+
+function saveScoreboard() {
+  if (!profile.nickname) return;
+  const scores = S.get('ctf_scores', []);
+  const totalTimeMs = Object.values(challengeTimes).reduce((a, b) => a + b, 0);
+  const entry = {
+    nickname:    profile.nickname,
+    avatar:      AVATARS[profile.avatar] || '[X]',
+    color:       profile.color,
+    date:        new Date().toLocaleDateString(),
+    completed:   completed.size,
+    totalCoins:  coins,
+    totalTimeMs: totalTimeMs,
+  };
+  const idx = scores.findIndex(s => s.nickname === profile.nickname);
+  if (idx >= 0) scores[idx] = entry; else scores.push(entry);
+  S.set('ctf_scores', scores);
+}
+
+function renderScoreboard() {
+  const scores = S.get('ctf_scores', []);
+  const tbody = document.getElementById('sb-body');
+  if (!tbody) return;
+  if (scores.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" class="sb-empty">NO SCORES YET — COMPLETE A CHALLENGE TO APPEAR HERE!</td></tr>`;
+    return;
+  }
+  scores.sort((a, b) =>
+    b.completed - a.completed || b.totalCoins - a.totalCoins || a.totalTimeMs - b.totalTimeMs
+  );
+  const medals = ['&#127949;', '&#127950;', '&#127951;'];
+  tbody.innerHTML = scores.map((s, i) => `
+    <tr class="${s.nickname === profile.nickname ? 'current-player' : ''}">
+      <td class="sb-rank">${i < 3 ? medals[i] : '#' + (i + 1)}</td>
+      <td style="color:${s.color}">${s.avatar}</td>
+      <td style="color:${s.color}">${s.nickname}${s.nickname === profile.nickname ? ' &#9668;' : ''}</td>
+      <td>${s.completed} / ${TOTAL}</td>
+      <td style="color:var(--gold)">&#9711; ${s.totalCoins}</td>
+      <td>${formatTime(s.totalTimeMs)}</td>
+      <td style="color:var(--dim);font-size:0.8rem">${s.date}</td>
+    </tr>`).join('');
+}
+
+// ─────────────────────────────────────────────
 // RESTORE COMPLETED STATE ON LOAD
 // ─────────────────────────────────────────────
 function restoreState() {
+  const flags = {
+    1:'FLAG{w3lc0me_h4ck3r}',       2:'FLAG{caesar_is_y0ur_fr1end}',
+    3:'FLAG{b1ts_and_byt3s}',        4:'FLAG{bas64_is0_cool}',
+    5:'FLAG{s3l3ct_all_t3xt}',       6:'FLAG{d3v_t00ls_ar3_p0w3r}',
+    7:'FLAG{h0x_1s_c00l}',           8:'FLAG{r0b0ts_kn0w_s3cr3ts}',
+    9:'FLAG{l0g1c_1s_y0ur_w3ap0n}',  10:'FLAG{y0u_ar3_th3_m4st3r}',
+    11:'FLAG{r0t13_1s_fun}',          12:'FLAG{url_3nc0ding_unlocked}',
+    13:'FLAG{morse_is_fun}',          14:'FLAG{vigilance}',
+    15:'FLAG{password_cracked}',      16:'FLAG{c0ns0le_cowb0y}',
+    17:'FLAG{c00k13_m0nster}',        18:'FLAG{cyber_xored}',
+    19:'FLAG{0ct4l_expl0r3r}',        20:'FLAG{g4untl3t_surv1v0r}',
+  };
   completed.forEach(id => {
     const input = document.getElementById(`flag-${id}`);
-    if (input) input.disabled = true;
-    const btn = input?.nextElementSibling;
+    if (!input) return;
+    input.disabled = true;
+    const btn = input.nextElementSibling;
     if (btn) btn.disabled = true;
     document.getElementById(`complete-${id}`)?.classList.add('show');
     const status = document.getElementById(`status-${id}`);
     if (status) { status.textContent = 'COMPLETE'; status.className = 'card-status status-done'; }
     document.getElementById(`card-${id}`)?.classList.add('completed');
-    // Re-fill input with flag (for display)
-    const flags = {
-      1: 'FLAG{w3lc0me_h4ck3r}', 2: 'FLAG{caesar_is_y0ur_fr1end}',
-      3: 'FLAG{b1ts_and_byt3s}', 4: 'FLAG{bas64_is0_cool}',
-      5: 'FLAG{s3l3ct_all_t3xt}', 6: 'FLAG{d3v_t00ls_ar3_p0w3r}',
-      7: 'FLAG{h0x_1s_c00l}', 8: 'FLAG{r0b0ts_kn0w_s3cr3ts}',
-      9: 'FLAG{l0g1c_1s_y0ur_w3ap0n}', 10: 'FLAG{y0u_ar3_th3_m4st3r}',
-    };
-    if (input && flags[id]) {
+    if (flags[id]) {
       input.value = flags[id];
       const fb = document.getElementById(`feedback-${id}`);
-      if (fb) { fb.textContent = `>> FLAG ACCEPTED! Coins awarded.`; fb.className = 'flag-feedback feedback-ok'; }
+      if (fb) { fb.textContent = '>> FLAG ACCEPTED! Coins awarded.'; fb.className = 'flag-feedback feedback-ok'; }
     }
   });
 }
@@ -2098,15 +2832,40 @@ function setupChallenge10() {
 }
 
 // ─────────────────────────────────────────────
+// ROT13 HELPER
+// ─────────────────────────────────────────────
+function rot13(str) {
+  return str.replace(/[a-zA-Z]/g, c => {
+    const base = c <= 'Z' ? 65 : 97;
+    return String.fromCharCode((c.charCodeAt(0) - base + 13) % 26 + base);
+  });
+}
+
+// Set up challenge 20 — triple-layer encoding: flag → hex → ROT13 → Base64
+function setupChallenge20() {
+  const flag = 'FLAG{g4untl3t_surv1v0r}';
+  const hex  = Array.from(flag).map(c => c.charCodeAt(0).toString(16).padStart(2,'0')).join('');
+  document.getElementById('ch20-encoded').textContent = btoa(rot13(hex));
+}
+
+// Set cookie for challenge 17
+function setupChallenge17() {
+  document.cookie = 'ctf_ch17_secret=FLAG{c00k13_m0nster}; path=/; SameSite=Lax';
+}
+
+// ─────────────────────────────────────────────
 // INIT
 // ─────────────────────────────────────────────
 function init() {
   renderHUD();
   restoreState();
+  restoreTips();
   updateProgress();
   checkBadges();
   applyAccent(profile.color);
   setupChallenge10();
+  setupChallenge20();
+  setupChallenge17();
   runBoot();
 }
 
